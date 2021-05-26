@@ -72,16 +72,20 @@
 			}
 			// now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
 
-			function showHideLayer(layerName, markerName, showOnly=false, hideOnly=false) {
+			function showHideLayer(layerName, markerNames, showOnly=false, hideOnly=false) {
 				var visibility = map.getLayoutProperty(layerName, 'visibility');
 					if ((visibility === 'visible' || hideOnly) && !showOnly) {
 						map.setLayoutProperty(layerName, 'visibility', 'none');
 						this.className = '';
-						document.getElementById(markerName).classList.add('inactive');
+						for (i in markerNames) {
+							document.getElementById(markerNames[i]).classList.add('inactive');
+						}
 					} else {
 						this.className = 'active';
 						map.setLayoutProperty(layerName, 'visibility', 'visible');
-						document.getElementById(markerName).classList.remove('inactive');
+						for (i in markerNames) {
+							document.getElementById(markerNames[i]).classList.remove('inactive');
+						}
 				}
 			}
 
@@ -275,15 +279,15 @@
 					];
 					updateURL(district=coords[4]);
 					if (showHouseDistricts) {
-						showHideLayer('state-house-districts-lines', markerName='state_house_districts', showOnly=true);
+						showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
 					} else if (showSenateDistricts) {
-						showHideLayer('state-senate-districts-lines', markerName='state_senate_districts', showOnly=true);
+						showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts'], showOnly=true);
 					}
 					map.fitBounds(bbox, options={padding: 10, duration: 3000});
 					if (filterField !== undefined) {
 						setTimeout(function(){
 							for (i in loadedLineLayers) {
-								showHideLayer(loadedLineLayers[i][0], loadedLineLayers[i][1], showOnly=true);
+								showHideLayer(loadedLineLayers[i][0], [loadedLineLayers[i][1]], showOnly=true);
 								if (
 									(loadedLineLayers[i][0].indexOf("state-senate-districts") > -1)
 									||
@@ -302,7 +306,7 @@
 							for (i in loadedPolygonLayers) {
 								showHideLayer(
 									loadedPolygonLayers[i][0],
-									loadedPolygonLayers[i][1],
+									[loadedPolygonLayers[i][1]],
 									showOnly = coords[4] === '0' ? false : true,
 									hideOnly = coords[4] === '0' ? true : false
 								);
@@ -326,7 +330,7 @@
 										loadedPointLayers[i][0],
 										['==', filterField, coords[4]]
 									);
-									showHideLayer(loadedPointLayers[i][0], loadedPointLayers[i][1], showOnly=true);
+									showHideLayer(loadedPointLayers[i][0], [loadedPointLayers[i][1]], showOnly=true);
 								}
 							}
 							activeDistrict = coords[4];
@@ -542,12 +546,18 @@
 				<div class='legend-title'>Click on a layer name below to toggle its visibility</div>
 				<div class='legend-scale'>
 					<ul class='legend-labels'>
-						<li onClick="showHideLayer('raising-blended-learners-campuses-points', markerName='raising_blended_learners_campuses');"><span id="raising_blended_learners_campuses" class="inactive"></span>Raising Blended Learners Campuses</li>
-						<li onClick="showHideLayer('charles-butt-scholars-points', markerName='charles_butt_scholars');"><span id="charles_butt_scholars" class="inactive"></span>Charles Butt Scholars</li>
-						<li onClick="showHideLayer('raising-texas-teachers-points', markerName='raising_texas_teachers');"><span id="raising_texas_teachers" class="inactive"></span>Partner Universities</li>
-						<li onClick="showHideLayer('raising-school-leaders-points', markerName='raising_school_leaders');"><span id="raising_school_leaders" class="inactive"></span>Raising School Leaders</li>
-						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerName='state_house_districts');"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
-						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerName='state_senate_districts');"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
+						<li onClick="showHideLayer('raising-blended-learners-campuses-points', markerNames=['raising_blended_learners_campuses']);"><span id="raising_blended_learners_campuses" class="inactive"></span>Raising Blended Learners Campuses</li>
+						<li>
+							<span onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);" id="charles_butt_scholars_icon" class="inactive"></span><span onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);" id="raising_texas_teachers_icon" class="inactive"></span>Raising Texas Teachers:
+							<ul>
+								<li onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);"><span id="charles_butt_scholars" class="inactive"></span>Charles Butt Scholars</li>
+								<li onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);"><span id="raising_texas_teachers" class="inactive"></span>Partner Universities</li>
+							</ul>
+							<br clear="all" />
+						</li>
+						<li onClick="showHideLayer('raising-school-leaders-points', markerNames=['raising_school_leaders']);"><span id="raising_school_leaders" class="inactive"></span>Raising School Leaders</li>
+						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerNames=['state_house_districts']);"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
+						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts']);"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
 					</ul>
 				</div> <!-- end of div class='legend-scale' -->
 				<div class='legend-source'>Source: <a href="https://www.raiseyourhandtexas.org/" target="_blank">Raise Your Hand Texas</a></div>

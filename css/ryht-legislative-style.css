@@ -159,7 +159,7 @@ ul{
     list-style: none;
     }
   .legend .legend-scale ul li {
-    font-size: 80%;
+    font-size: 13px;
     list-style: none;
     margin-left: 0;
     line-height: 20px;
@@ -174,6 +174,9 @@ ul{
     margin-left: 0px;
     border: 0px solid #999;
     }
+  .legend ul.legend-labels li ul { /* to indent nested lists in the legend */
+  	margin-left: 1em;
+  }
 
 	.inactive {
 		opacity: 0.25;
@@ -195,14 +198,6 @@ ul{
 	display: block;
 	float: left;
 }
-#raising_family_partnerships
-{
-	background:url(../markers/raising_family_partnerships_eye.svg) left center;
-	width:28px;
-	height:14px;
-	display: block;
-	float: left;
-}
 #charles_butt_scholars
 {
 	background:url(../markers/charles_butt_scholars_eye.svg) left center;
@@ -211,6 +206,15 @@ ul{
 	display: block;
 	float: left;
 }
+#charles_butt_scholars_icon
+{
+	background:url(../markers/charles_butt_scholars_eye.svg) left center;
+	width: 14px;
+	height: 14px;
+	display: block;
+	float: left;
+	background-position: right;
+}
 #raising_texas_teachers
 {
 	background:url(../markers/raising_texas_teachers_eye.svg) left center;
@@ -218,6 +222,15 @@ ul{
 	height:14px;
 	display: block;
 	float: left;
+}
+#raising_texas_teachers_icon
+{
+	background:url(../markers/raising_texas_teachers_eye.svg) left center;
+	width:14px;
+	height:14px;
+	display: block;
+	float: left;
+	background-position: right;
 }
 #raising_school_leaders
 {
@@ -502,7 +515,7 @@ button.collapsible  {
   font-size:12px;
  /* width:auto !important;*/
   }
-  
+
 /*Styling for hr in pop-ups*/
 
 hr.divider {
