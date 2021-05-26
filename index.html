@@ -78,13 +78,17 @@
 						map.setLayoutProperty(layerName, 'visibility', 'none');
 						this.className = '';
 						for (i in markerNames) {
-							document.getElementById(markerNames[i]).classList.add('inactive');
+							if (document.getElementById(markerNames[i]) !== null) {
+								document.getElementById(markerNames[i]).classList.add('inactive');
+							}
 						}
 					} else {
 						this.className = 'active';
 						map.setLayoutProperty(layerName, 'visibility', 'visible');
 						for (i in markerNames) {
-							document.getElementById(markerNames[i]).classList.remove('inactive');
+							if (document.getElementById(markerNames[i]) !== null) {
+								document.getElementById(markerNames[i]).classList.remove('inactive');
+							}
 						}
 				}
 			}
@@ -330,7 +334,7 @@
 										loadedPointLayers[i][0],
 										['==', filterField, coords[4]]
 									);
-									showHideLayer(loadedPointLayers[i][0], [loadedPointLayers[i][1]], showOnly=true);
+									showHideLayer(loadedPointLayers[i][0], [loadedPointLayers[i][1], loadedPointLayers[i][1] + '_icon'], showOnly=true);
 								}
 							}
 							activeDistrict = coords[4];
