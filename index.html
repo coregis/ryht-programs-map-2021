@@ -72,16 +72,24 @@
 			}
 			// now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
 
-			function showHideLayer(layerName, markerName, showOnly=false, hideOnly=false) {
+			function showHideLayer(layerName, markerNames, showOnly=false, hideOnly=false) {
 				var visibility = map.getLayoutProperty(layerName, 'visibility');
 					if ((visibility === 'visible' || hideOnly) && !showOnly) {
 						map.setLayoutProperty(layerName, 'visibility', 'none');
 						this.className = '';
-						document.getElementById(markerName).classList.add('inactive');
+						for (i in markerNames) {
+							if (document.getElementById(markerNames[i]) !== null) {
+								document.getElementById(markerNames[i]).classList.add('inactive');
+							}
+						}
 					} else {
 						this.className = 'active';
 						map.setLayoutProperty(layerName, 'visibility', 'visible');
-						document.getElementById(markerName).classList.remove('inactive');
+						for (i in markerNames) {
+							if (document.getElementById(markerNames[i]) !== null) {
+								document.getElementById(markerNames[i]).classList.remove('inactive');
+							}
+						}
 				}
 			}
 
@@ -106,9 +114,6 @@
 					}
 					// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 					setTimeout(function(){
-						map.moveLayer('raising-blended-learners-campuses-points', 'raising-family-partnerships-points');
-						map.moveLayer('charles-butt-scholars-points', 'raising-family-partnerships-points');
-						map.moveLayer('raising-school-leaders-points', 'raising-family-partnerships-points');
 						map.moveLayer('charles-butt-scholars-points', 'raising-texas-teachers-points');
 						map.moveLayer('raising-blended-learners-campuses-points', 'raising-texas-teachers-points');
 						map.moveLayer('raising-school-leaders-points', 'raising-blended-learners-points');
@@ -278,15 +283,15 @@
 					];
 					updateURL(district=coords[4]);
 					if (showHouseDistricts) {
-						showHideLayer('state-house-districts-lines', markerName='state_house_districts', showOnly=true);
+						showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
 					} else if (showSenateDistricts) {
-						showHideLayer('state-senate-districts-lines', markerName='state_senate_districts', showOnly=true);
+						showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts'], showOnly=true);
 					}
 					map.fitBounds(bbox, options={padding: 10, duration: 3000});
 					if (filterField !== undefined) {
 						setTimeout(function(){
 							for (i in loadedLineLayers) {
-								showHideLayer(loadedLineLayers[i][0], loadedLineLayers[i][1], showOnly=true);
+								showHideLayer(loadedLineLayers[i][0], [loadedLineLayers[i][1]], showOnly=true);
 								if (
 									(loadedLineLayers[i][0].indexOf("state-senate-districts") > -1)
 									||
@@ -305,7 +310,7 @@
 							for (i in loadedPolygonLayers) {
 								showHideLayer(
 									loadedPolygonLayers[i][0],
-									loadedPolygonLayers[i][1],
+									[loadedPolygonLayers[i][1]],
 									showOnly = coords[4] === '0' ? false : true,
 									hideOnly = coords[4] === '0' ? true : false
 								);
@@ -329,7 +334,7 @@
 										loadedPointLayers[i][0],
 										['==', filterField, coords[4]]
 									);
-									showHideLayer(loadedPointLayers[i][0], loadedPointLayers[i][1], showOnly=true);
+									showHideLayer(loadedPointLayers[i][0], [loadedPointLayers[i][1], loadedPointLayers[i][1] + '_icon'], showOnly=true);
 								}
 							}
 							activeDistrict = coords[4];
@@ -468,12 +473,6 @@
 			<div class="content">
 				<p class="programs">Through <a href="https://www.raiseyourhandtexas.org/foundation/raising-school-leaders/" class="programlink" target="_blank">Raising School Leaders</a>, Raise Your Hand Texas and the Raise Your Hand Texas Foundation have sent more than 1,000 school principals, school district teams, and other public education stakeholders to leadership development and coaching programs at Harvard University and other colleges and education organizations across the country. To date, our total investment in the program has exceeded +$15 million.</p>
 			</div>
-			<br>
-			<a href="https://www.raiseyourhandtexas.org/foundation/raising-family-partnerships/" class="programlink" target="_blank"><img src="images/rfp.svg" /></a>
-			<button class="collapsible">Read more...</button>
-			<div class="content">
-			 <p class="programs"><a href="https://www.raiseyourhandtexas.org/foundation/raising-family-partnerships/" class="programlink" target="_blank">Raising Family Partnerships</a> is a year-long fellowship for public school principals and their leadership teams to redesign how families, schools, and communities collaborate to improve student outcomes. To date, Raise Your Hand has invested +$300,000 in helping fellows build capacity and scale a framework for better partnerships between educators and families.</p>
-			</div>
 
 			<br>
 
@@ -534,7 +533,6 @@
 					<ul class='stats-labels'>
 <!-- for maintenance: always make the id of these = count.layerName because that's what the updateStatsBox() function looks for -->
 						<li>Raising Blended Learners:  <span class="count.rbl" id="count.raising-blended-learners-campuses-points"></span></li>
-						<li>Raising Family Partnerships: <span class="count.rfp" id="count.raising-family-partnerships-points"></span></li>
 						<li>Charles Butt Scholars: <span class="count.cbs" id="count.charles-butt-scholars-points"></span></li>
 						<li>Partner Universities: <span class="count.ihe" id="count.raising-texas-teachers-points"></span></li>
 						<li>Raising School Leaders: <span class="count.rsl" id="count.raising-school-leaders-points"></span></li>
@@ -552,13 +550,18 @@
 				<div class='legend-title'>Click on a layer name below to toggle its visibility</div>
 				<div class='legend-scale'>
 					<ul class='legend-labels'>
-						<li onClick="showHideLayer('raising-blended-learners-campuses-points', markerName='raising_blended_learners_campuses');"><span id="raising_blended_learners_campuses" class="inactive"></span>Raising Blended Learners Campuses</li>
-						<li onClick="showHideLayer('raising-family-partnerships-points', markerName='raising_family_partnerships');"><span id="raising_family_partnerships" class="inactive"></span>Raising Family Partnerships</li>
-						<li onClick="showHideLayer('charles-butt-scholars-points', markerName='charles_butt_scholars');"><span id="charles_butt_scholars" class="inactive"></span>Charles Butt Scholars</li>
-						<li onClick="showHideLayer('raising-texas-teachers-points', markerName='raising_texas_teachers');"><span id="raising_texas_teachers" class="inactive"></span>Partner Universities</li>
-						<li onClick="showHideLayer('raising-school-leaders-points', markerName='raising_school_leaders');"><span id="raising_school_leaders" class="inactive"></span>Raising School Leaders</li>
-						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerName='state_house_districts');"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
-						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerName='state_senate_districts');"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
+						<li onClick="showHideLayer('raising-blended-learners-campuses-points', markerNames=['raising_blended_learners_campuses']);"><span id="raising_blended_learners_campuses" class="inactive"></span>Raising Blended Learners Campuses</li>
+						<li>
+							<span onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);" id="charles_butt_scholars_icon" class="inactive"></span><span onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);" id="raising_texas_teachers_icon" class="inactive"></span>Raising Texas Teachers:
+							<ul>
+								<li onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);"><span id="charles_butt_scholars" class="inactive"></span>Charles Butt Scholars</li>
+								<li onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);"><span id="raising_texas_teachers" class="inactive"></span>Partner Universities</li>
+							</ul>
+							<br clear="all" />
+						</li>
+						<li onClick="showHideLayer('raising-school-leaders-points', markerNames=['raising_school_leaders']);"><span id="raising_school_leaders" class="inactive"></span>Raising School Leaders</li>
+						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerNames=['state_house_districts']);"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
+						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts']);"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
 					</ul>
 				</div> <!-- end of div class='legend-scale' -->
 				<div class='legend-source'>Source: <a href="https://www.raiseyourhandtexas.org/" target="_blank">Raise Your Hand Texas</a></div>
@@ -713,26 +716,14 @@
 				addPointLayer(
 					map,
 					{
-						'gusID': "1lW_TLQ25u20FtYMsJIrgWbGvMpdkIVfehZ2wsDa8eck", // Google Sheets ID
-						'sourceName': 'raising-family-partnerships', // this one will be the data source name, used internally
-						'layerName': 'raising-family-partnerships-points', // layer name, used internally
-						'icon': 'raising_family_partnerships_large', // this one will be the icon image name, using the name from Mapbox
+						'gusID': '1yIR3n3a7RBNlKzwU7nQsWQAPJORms_o4lmRKoST5RWU', // Google Sheets ID
+						'sourceName': 'raising-blended-learners-campuses', // the data source name, used internally
+						'layerName': 'raising-blended-learners-campuses-points', // layer name, used internally
+						'icon': 'raising_blended_learners_campuses_large', // the icon image name, using the name from Mapbox
 						'iconSize': 0.1, // a size multiplier for the icon, which should be saved at 1/x times the intended initial display size, so that when it gets scaled up on zooming in it will still look good
-						'legendID': 'raising_family_partnerships', // OPTIONAL: the id in the legend, so we can set it to active or inactive as appropriate. Simply leave out for layers that don't appear in the legend
+						'legendID': 'raising_blended_learners_campuses', // OPTIONAL: the id in the legend, so we can set it to active or inactive as appropriate. Simply leave out for layers that don't appear in the legend
 						'scalingFactor': 2.5, // OPTIONAL: how much to magnify the markers by when zooming in.  Defaults to 2.5 if not specified; set to zero to have no zoom at all.
 						'visibleOnLoad': false // set the optional final argument to true to have the layer visible on load
-					}
-				);
-
-				addPointLayer(
-					map,
-					{
-						'gusID': '1yIR3n3a7RBNlKzwU7nQsWQAPJORms_o4lmRKoST5RWU',
-						'sourceName': 'raising-blended-learners-campuses',
-						'layerName': 'raising-blended-learners-campuses-points',
-						'icon': 'raising_blended_learners_campuses_large',
-						'iconSize': 0.1,
-						'legendID': 'raising_blended_learners_campuses'
 					}
 				);
 
@@ -888,33 +879,6 @@
 				html = html + "<br />"
 				html = html + "<span class='varname'>School District: </span> <span class='attribute'>" + data.district + "</span>";
 				return html;
-				//this will return the string to the calling function
-
-			}
-
-		//raising family partnerships popup
-			map.on('click', 'raising-family-partnerships-points', function (e) {
-				var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-				new mapboxgl.Popup()
-					.setLngLat(e.lngLat)
-					.setHTML(fillpopup_rfp(e.features[0].properties) + expandDistrictInfo(district))
-					.addTo(map);
-			});
-
-			 // Change the cursor to a pointer when the mouse is over the points layer.
-				map.on('mouseenter', 'raising-family-partnerships-points', function () {
-					map.getCanvas().style.cursor = 'pointer';
-				});
-
-				// Change it back to a pointer when it leaves.
-				map.on('mouseleave', 'raising-family-partnerships-points', function () {
-					map.getCanvas().style.cursor = '';
-				});
-
-			function fillpopup_rfp(data){
-				var html_rfp = "";
-				html_rfp = html_rfp + "<span class='varname'>School: </span> <span class='attribute'>" + standardizeCase(data.account_name) + "</span>";
-				return html_rfp;
 				//this will return the string to the calling function
 
 			}
