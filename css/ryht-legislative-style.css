@@ -410,6 +410,15 @@ p.programs  {
     transition: 0.3s
 }
 
+.sidenav img {
+	width: 240px;
+	padding: 0px 30px;
+}
+
+.sidenav p.moreinfo img {
+	padding: 0px;
+}
+
  .content .programlink {
     /*padding: 8px 8px 8px 32px;*/
     text-decoration: none;
@@ -417,6 +426,10 @@ p.programs  {
     font-size: 10px;
     color: #ee5e2a;
     transition: 0.3s
+}
+
+.sidenav .svg_old {
+
 }
 
 .sidenav a {
