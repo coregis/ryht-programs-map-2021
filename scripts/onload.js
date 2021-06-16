@@ -300,7 +300,7 @@ map.on('click', 'raising-texas-teachers-points', function (e) {
 
 function fillpopup_rtt(data){
 	var html = "";
-	html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.account_name + "</span>";
+	html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.university_name + "</span>";
 	return html;
 	//this will return the string to the calling function
 
