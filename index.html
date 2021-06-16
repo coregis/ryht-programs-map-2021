@@ -623,7 +623,7 @@
 			}
 
 			function addPointLayer(map, params) {
-				gus_api(params.gusID, function(jsondata) {
+				gus_api(params.gusID, params.gusPage, function(jsondata) {
 					var visibilityState = setVisibilityState(params);
 					if (params.scalingFactor === undefined) { params.scalingFactor = 2.5; }
 					map.addSource(params.sourceName, {
@@ -717,6 +717,7 @@
 					map,
 					{
 						'gusID': '1yIR3n3a7RBNlKzwU7nQsWQAPJORms_o4lmRKoST5RWU', // Google Sheets ID
+						'gusPage': 'od6', // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
 						'sourceName': 'raising-blended-learners-campuses', // the data source name, used internally
 						'layerName': 'raising-blended-learners-campuses-points', // layer name, used internally
 						'icon': 'raising_blended_learners_campuses_large', // the icon image name, using the name from Mapbox
@@ -730,7 +731,8 @@
 				addPointLayer(
 					map,
 					{
-						'gusID': "1jlfzTbBwEZVMlkGSJLf9v50vBvHeTJKq13xLus7KbC4",
+						'gusID': "1eLkfBuimyujyjnGN7GlTrA_XcRhpCb-cFaxGV9OYaBc",
+						'gusPage': 1,
 						'sourceName': 'charles-butt-scholars',
 						'layerName': 'charles-butt-scholars-points',
 						'icon': 'charles_butt_scholars_large',
@@ -743,6 +745,7 @@
 					map,
 					{
 						'gusID': "1e24TCpzxcgbSY6CaqDUn4Ll_F36Ttc9341EXEyhpsVs",
+						'gusPage': 'od6',
 						'sourceName': 'raising-texas-teachers',
 						'layerName': 'raising-texas-teachers-points',
 						'icon': 'raising_texas_teachers_large',
@@ -755,6 +758,7 @@
 					map,
 					{
 						'gusID': "1MLMUvg5WXSf3CytsEzEdVPsYPYUb_2nSXsnRnD_7Lj0",
+						'gusPage': 'od6',
 						'sourceName': 'raising-school-leaders',
 						'layerName': 'raising-school-leaders-points',
 						'icon': 'raising_school_leaders_large',
@@ -1026,8 +1030,8 @@
 
 
 
-			function gus_api(id, callback) {
-				const url = `https://spreadsheets.google.com/feeds/cells/${id}/od6/public/basic?alt=json`;
+			function gus_api(id, page='od6', callback) {
+				const url = `https://spreadsheets.google.com/feeds/cells/${id}/${page}/public/basic?alt=json`;
 
 				fetchJSONFile(url, function(data) {
 
