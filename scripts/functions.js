@@ -1,3 +1,49 @@
+// store this as a global variable so that the stats box can always access the current value
+var activeDistrict = '0';
+// first we check for the URL parameter '?districts=senate'.  If found, we'll show state senate districts; otherwise state house
+var urlParams = {};
+window.location.href.replace(
+	/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {urlParams[key] = value;}
+);
+var showHouseDistricts = true;
+var showSenateDistricts = false;
+if (
+	(
+		urlParams["districts"] && (
+			urlParams["districts"].toLowerCase().indexOf("sen") > -1
+			||
+			urlParams["districts"].toLowerCase() === 's'
+		)
+	) || (
+		urlParams["Districts"] && (
+			urlParams["Districts"].toLowerCase().indexOf("sen") > -1
+			||
+			urlParams["Districts"].toLowerCase() === 's'
+		)
+	) || (
+		urlParams["display"] && (
+			urlParams["display"].toLowerCase().indexOf("sen") > -1
+			||
+			urlParams["display"].toLowerCase() === 's'
+		)
+	) || (
+		urlParams["Display"] && (
+			urlParams["Display"].toLowerCase().indexOf("sen") > -1
+			||
+			urlParams["Display"].toLowerCase() === 's'
+		)
+	)
+) {
+	showHouseDistricts = false;
+	showSenateDistricts = true;
+}
+// now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
+
+
+
+
+
+
 function showHideLayer(layerName, markerNames, showOnly=false, hideOnly=false) {
 	var visibility = map.getLayoutProperty(layerName, 'visibility');
 		if ((visibility === 'visible' || hideOnly) && !showOnly) {
