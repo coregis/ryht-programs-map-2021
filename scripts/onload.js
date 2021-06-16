@@ -54,6 +54,68 @@ if (showSenateDistricts) {
 
 
 
+
+// store this as a global variable so that the stats box can always access the current value
+var activeDistrict = '0';
+// first we check for the URL parameter '?districts=senate'.  If found, we'll show state senate districts; otherwise state house
+var urlParams = {};
+window.location.href.replace(
+	/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {urlParams[key] = value;}
+);
+var showHouseDistricts = true;
+var showSenateDistricts = false;
+if (
+	(
+		urlParams["districts"] && (
+			urlParams["districts"].toLowerCase().indexOf("sen") > -1
+			||
+			urlParams["districts"].toLowerCase() === 's'
+		)
+	) || (
+		urlParams["Districts"] && (
+			urlParams["Districts"].toLowerCase().indexOf("sen") > -1
+			||
+			urlParams["Districts"].toLowerCase() === 's'
+		)
+	) || (
+		urlParams["display"] && (
+			urlParams["display"].toLowerCase().indexOf("sen") > -1
+			||
+			urlParams["display"].toLowerCase() === 's'
+		)
+	) || (
+		urlParams["Display"] && (
+			urlParams["Display"].toLowerCase().indexOf("sen") > -1
+			||
+			urlParams["Display"].toLowerCase() === 's'
+		)
+	)
+) {
+	showHouseDistricts = false;
+	showSenateDistricts = true;
+}
+// now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
+
+
+
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+	coll[i].addEventListener("click", function() {
+		this.classList.toggle("active");
+		var content = this.nextElementSibling;
+		if (content.style.maxHeight) {
+			content.style.maxHeight = null;
+		} else {
+			content.style.maxHeight = content.scrollHeight + "px";
+		}
+	});
+}
+
+
+
 // Change the cursor to a pointer when the mouse is over the house districts layer.
 map.on('mouseenter', 'school_house_senate_districts_UNION-poly', function () {
 	map.getCanvas().style.cursor = 'pointer';
