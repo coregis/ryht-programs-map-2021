@@ -242,6 +242,7 @@ function updateYearSlider(numberID, year) {
 	}
 	// update text in the UI
 	document.getElementById(numberID).innerText = year;
+	updateStatsBox();
 }
 
 function moveYearSlider(sliderID, numberID, increment, loop=false) {
@@ -403,9 +404,9 @@ function zoomToPolygon(sourceID, coords, filterField) {
 					}
 				}
 				if (coords[4] !== '0') {
-					for (i = 500; i <= 5500; i += 1000) {
+					for (i = 500; i <= 5500; i += 500) {
 						setTimeout(function(){
-							updateStatsBox(filterField);
+							updateStatsBox();
 						}, i);
 					}
 				} else {
@@ -416,23 +417,25 @@ function zoomToPolygon(sourceID, coords, filterField) {
 	}
 }
 
-function updateStatsBox(districtType) {
+function updateStatsBox() {
 	if (filterStates.district) { // only do anything if we have a selected district
 		document.getElementById('statsBox').style.opacity = 1;
-		if (districtType.indexOf("house") > -1) {
+		if (filterStates.district.field.indexOf("house") > -1) {
 			document.getElementById("stats.districtType").innerText = "House";
-		} else if (districtType.indexOf("senate") > -1) {
+		} else if (filterStates.district.field.indexOf("senate") > -1) {
 			document.getElementById("stats.districtType").innerText = "Senate";
 		} else {
 			document.getElementById("stats.districtType").innerText = "";
 		}
 		document.getElementById("stats.districtName").innerText = filterStates.district.val;
+		document.getElementById("stats.year").innerText = filterStates.year;
 		for (i in loadedPointLayers) {
 			pointsInDistrict = getUniqueFeatures(
 				map.queryRenderedFeatures( { layers:[loadedPointLayers[i][0]] } ),
 				"unique_id"
 			);
 			counterID = "count." + loadedPointLayers[i][0];
+			console.log(pointsInDistrict);
 			document.getElementById(counterID).innerText = pointsInDistrict.length;
 		}
 	} else {
