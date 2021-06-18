@@ -109,7 +109,7 @@ map.on('load', function () {
 			'iconSize': 0.1, // a size multiplier for the icon, which should be saved at 1/x times the intended initial display size, so that when it gets scaled up on zooming in it will still look good
 			'legendID': 'raising_blended_learners_campuses', // OPTIONAL: the id in the legend, so we can set it to active or inactive as appropriate. Simply leave out for layers that don't appear in the legend
 			'scalingFactor': 2.5, // OPTIONAL: how much to magnify the markers by when zooming in.  Defaults to 2.5 if not specified; set to zero to have no zoom at all.
-			'visibleOnLoad': false // set the optional final argument to true to have the layer visible on load
+			'visibleOnLoad': true // set the optional final argument to true to have the layer visible on load
 		}
 	);
 
@@ -122,7 +122,8 @@ map.on('load', function () {
 			'layerName': 'charles-butt-scholars-points',
 			'icon': 'charles_butt_scholars_large',
 			'iconSize': 0.1,
-			'legendID': 'charles_butt_scholars'
+			'legendID': 'charles_butt_scholars',
+			'visibleOnLoad': true
 		}
 	);
 
@@ -135,7 +136,8 @@ map.on('load', function () {
 			'layerName': 'raising-texas-teachers-points',
 			'icon': 'raising_texas_teachers_large',
 			'iconSize': 0.1,
-			'legendID': 'raising_texas_teachers'
+			'legendID': 'raising_texas_teachers',
+			'visibleOnLoad': true
 		}
 	);
 
@@ -149,6 +151,7 @@ map.on('load', function () {
 			'icon': 'raising_school_leaders_large',
 			'iconSize': 0.1,
 			'legendID': 'raising_school_leaders',
+			'visibleOnLoad': true,
 			'scalingFactor': 0.5
 		}
 	);
