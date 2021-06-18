@@ -236,7 +236,10 @@ function setFilter(sourceID) {
 // Update the year slider and corresponding map filter
 function updateYearSlider(numberID, year) {
 	filterStates.year = parseInt(year, 10);
-	setFilter('raising-school-leaders-points');
+	console.log(loadedPointLayers);
+	for (i in loadedPointLayers) {
+		setFilter(loadedPointLayers[i][0]);
+	}
 	// update text in the UI
 	document.getElementById(numberID).innerText = year;
 }
