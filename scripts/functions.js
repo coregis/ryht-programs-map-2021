@@ -219,14 +219,14 @@ function setFilter(sourceID) {
 		map.setFilter(
 			sourceID,
 			['all',
-				['==', 'year', filterStates.year.toString()],
+				['<=', 'year', filterStates.year.toString()],
 				['==', filterStates.district.field, filterStates.district.val.toString()]
 			]
 		);
 	} else if (filterStates.year) {
 		map.setFilter(
 			sourceID,
-			['==', 'year', filterStates.year.toString()]
+			['<=', 'year', filterStates.year.toString()]
 		);
 	} else {
 		console.log('something`s wrong, there should never be no year filter', filterStates);
