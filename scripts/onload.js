@@ -209,6 +209,11 @@ map.on('load', function () {
 		}
 	);
 
+	//add interactivity to the time slider
+	document.getElementById('slider').addEventListener('input', function(e) {
+		updateYearSlider('active-year', e.target.value);
+	});
+
 	runWhenLoadComplete();
 });
 

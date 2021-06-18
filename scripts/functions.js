@@ -1,5 +1,6 @@
 // store this as a global variable so that the stats box can always access the current value
 var activeDistrict = '0';
+var activeYear = false;
 // first we check for the URL parameter '?districts=senate'.  If found, we'll show state senate districts; otherwise state house
 var urlParams = {};
 window.location.href.replace(
@@ -76,6 +77,7 @@ function runWhenLoadComplete() {
 		setTimeout(runWhenLoadComplete, 100);
 	}
 	else {
+		moveYearSlider('slider', 'active-year', 0); // calling this with a 0 increment will make sure that the filter, caption and slider position all match.  Without doing this, the browser seems to keep the slider position between refreshes, but reset the filter and caption so they get out of sync.
 		if (showHouseDistricts) {
 			populateZoomControl("house-districts-control", "state-house-districts", "District", "Texas House Districts");
 			map.moveLayer('state-house-districts-lines');
@@ -207,6 +209,82 @@ function getUniqueFeatures(array, comparatorProperty) {
 	});
 
 	return uniqueFeatures;
+}
+
+// apply map filters persistently
+function setFilter(sourceID) {
+	if (activeYear) {
+		map.setFilter(
+			sourceID,
+			['==', 'year', activeYear.toString()]
+		);
+	} else {
+		console.log('something`s wrong, there should never be no year filter', filterStates);
+	}
+}
+
+// Update the year slider and corresponding map filter
+function updateYearSlider(numberID, year) {
+	activeYear = parseInt(year, 10);
+	setFilter('raising-school-leaders-points');
+	// update text in the UI
+	document.getElementById(numberID).innerText = year;
+}
+
+function moveYearSlider(sliderID, numberID, increment, loop=false) {
+	slider = document.getElementById(sliderID);
+	minYear = parseInt(slider.min, 10);
+	currentYear = parseInt(slider.value, 10);
+	maxYear = parseInt(slider.max, 10);
+
+	desiredYear = currentYear + increment;
+
+	if (loop) { // if we're looping then wrap any overflow around
+		if (desiredYear > maxYear) {desiredYear = minYear;}
+		else if (desiredYear < minYear) {desiredYear = maxYear;}
+	}
+	else { // if not looping then keep changes within the min/max bounds
+		if ((desiredYear > maxYear) || (desiredYear < minYear)) {
+			desiredYear = currentYear;
+			console.log('Hacking too much time');
+		}
+	}
+
+	slider.value = desiredYear;
+	updateYearSlider(numberID, desiredYear);
+	popups = document.getElementsByClassName('popup-text-holder');
+	if (popups.length > 0) {
+		data = pickFeature(popupState.campusID, desiredYear, 'points');
+		if (data === undefined) {
+			console.log("Removing popup because campus " + popupState.campusID + " didn't exist in " + desiredYear);
+			popupState.popup.remove();
+		} else {
+			popups[0].innerHTML = fillpopup(data);
+		}
+	}
+}
+
+function animateYearSlider(sliderID, numberID, delay) {
+	if (animationRunning) {
+		moveYearSlider(sliderID, numberID, 1, loop=true);
+		setTimeout(
+			function() {animateYearSlider(sliderID, numberID, delay)},
+			delay
+		);
+	}
+}
+
+function startYearAnimation(sliderID, numberID, delay, playID, stopID) {
+	animationRunning = true;
+	document.getElementById(playID).style.display = 'none';
+	document.getElementById(stopID).style.display = 'inline';
+	animateYearSlider(sliderID, numberID, delay);
+}
+
+function stopYearAnimation(playID, stopID) {
+	animationRunning = false;
+	document.getElementById(playID).style.display = 'inline';
+	document.getElementById(stopID).style.display = 'none';
 }
 
 function updateURL(district='0') {
@@ -575,6 +653,7 @@ function gus_api(id, page='od6', callback) {
 			gj.features.push(feature);
 		}
 
+		console.log(gj);
 		callback(gj);
 	});
 };
