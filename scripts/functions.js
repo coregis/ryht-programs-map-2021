@@ -1,6 +1,8 @@
 // store this as a global variable so that the stats box can always access the current value
-var activeDistrict = '0';
-var activeYear = false;
+var filterStates = {
+	year: false,
+	district: false
+};
 // first we check for the URL parameter '?districts=senate'.  If found, we'll show state senate districts; otherwise state house
 var urlParams = {};
 window.location.href.replace(
@@ -213,10 +215,18 @@ function getUniqueFeatures(array, comparatorProperty) {
 
 // apply map filters persistently
 function setFilter(sourceID) {
-	if (activeYear) {
+	if (filterStates.year && filterStates.district) {
 		map.setFilter(
 			sourceID,
-			['==', 'year', activeYear.toString()]
+			['all',
+				['==', 'year', filterStates.year.toString()],
+				['==', filterStates.district.field, filterStates.district.val.toString()]
+			]
+		);
+	} else if (filterStates.year) {
+		map.setFilter(
+			sourceID,
+			['==', 'year', filterStates.year.toString()]
 		);
 	} else {
 		console.log('something`s wrong, there should never be no year filter', filterStates);
@@ -225,7 +235,7 @@ function setFilter(sourceID) {
 
 // Update the year slider and corresponding map filter
 function updateYearSlider(numberID, year) {
-	activeYear = parseInt(year, 10);
+	filterStates.year = parseInt(year, 10);
 	setFilter('raising-school-leaders-points');
 	// update text in the UI
 	document.getElementById(numberID).innerText = year;
@@ -340,6 +350,14 @@ function zoomToPolygon(sourceID, coords, filterField) {
 		map.fitBounds(bbox, options={padding: 10, duration: 3000});
 		if (filterField !== undefined) {
 			setTimeout(function(){
+				if (coords[4] === '0') {
+					filterStates.district = false;
+				} else {
+					filterStates.district = {
+						'field': filterField,
+						'val':   coords[4]
+					};
+				}
 				for (i in loadedLineLayers) {
 					showHideLayer(loadedLineLayers[i][0], [loadedLineLayers[i][1]], showOnly=true);
 					if (
@@ -374,20 +392,13 @@ function zoomToPolygon(sourceID, coords, filterField) {
 							['!=', 'District', parseInt(coords[4])]
 						);
 					}
-
 				}
 				for (i in loadedPointLayers) {
-					if (coords[4] === '0') {
-						map.setFilter(loadedPointLayers[i][0], null);
-					} else {
-						map.setFilter(
-							loadedPointLayers[i][0],
-							['==', filterField, coords[4]]
-						);
+					setFilter(loadedPointLayers[i][0]);
+					if (coords[4] != '0') {
 						showHideLayer(loadedPointLayers[i][0], [loadedPointLayers[i][1], loadedPointLayers[i][1] + '_icon'], showOnly=true);
 					}
 				}
-				activeDistrict = coords[4];
 				if (coords[4] !== '0') {
 					for (i = 500; i <= 5500; i += 1000) {
 						setTimeout(function(){
@@ -403,7 +414,7 @@ function zoomToPolygon(sourceID, coords, filterField) {
 }
 
 function updateStatsBox(districtType) {
-	if (activeDistrict !== '0') { // only do anything if we have a selected district
+	if (filterStates.district) { // only do anything if we have a selected district
 		document.getElementById('statsBox').style.opacity = 1;
 		if (districtType.indexOf("house") > -1) {
 			document.getElementById("stats.districtType").innerText = "House";
@@ -412,7 +423,7 @@ function updateStatsBox(districtType) {
 		} else {
 			document.getElementById("stats.districtType").innerText = "";
 		}
-		document.getElementById("stats.districtName").innerText = activeDistrict;
+		document.getElementById("stats.districtName").innerText = filterStates.district.val;
 		for (i in loadedPointLayers) {
 			pointsInDistrict = getUniqueFeatures(
 				map.queryRenderedFeatures( { layers:[loadedPointLayers[i][0]] } ),
@@ -653,7 +664,8 @@ function gus_api(id, page='od6', callback) {
 			gj.features.push(feature);
 		}
 
-		console.log(gj);
+		console.log(id);
+		console.log(gj.features[0].properties);
 		callback(gj);
 	});
 };
