@@ -215,19 +215,34 @@ function getUniqueFeatures(array, comparatorProperty) {
 
 // apply map filters persistently
 function setFilter(sourceID) {
-	if (filterStates.year && filterStates.district) {
-		map.setFilter(
+	if (filterStates.year) {
+		if (filterStates.district) {
+			map.setFilter(
+				sourceID,
+				['all',
+					['<=', 'year', filterStates.year.toString()],
+					['==', filterStates.district.field, filterStates.district.val.toString()]
+				]
+			);
+		} else {
+			map.setFilter(
+				sourceID,
+				['<=', 'year', filterStates.year.toString()]
+			);
+		}
+		/*
+		map.setPaintProperty(
 			sourceID,
-			['all',
-				['<=', 'year', filterStates.year.toString()],
-				['==', filterStates.district.field, filterStates.district.val.toString()]
+			'icon-opacity',
+			[
+				"interpolate",
+				["linear"],
+				['-', filterStates.year, ['number', ['get', 'year']]],
+				0, 1,
+				(filterStates.year - 2008 - 1), 0
 			]
 		);
-	} else if (filterStates.year) {
-		map.setFilter(
-			sourceID,
-			['<=', 'year', filterStates.year.toString()]
-		);
+		*/
 	} else {
 		console.log('something`s wrong, there should never be no year filter', filterStates);
 	}
