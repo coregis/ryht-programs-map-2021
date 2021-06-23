@@ -101,12 +101,29 @@ map.on('load', function () {
 	addPointLayer(
 		map,
 		{
+			'gusID': "1CuutbSlRIgD1FsCUgQE0GyuPckgh6_zLhX-CfzQBymU",
+			'gusPage': 1,
+			'sourceName': 'raising-school-leaders',
+			'layerName': 'raising-school-leaders-points',
+			'circleColor': '#005BAD',
+			'circleRadius': 5,
+			'legendID': 'raising_school_leaders',
+			'visibleOnLoad': true,
+			'scalingFactor': 0.5
+		}
+	);
+
+	addPointLayer(
+		map,
+		{
 			'gusID': '1yIR3n3a7RBNlKzwU7nQsWQAPJORms_o4lmRKoST5RWU', // Google Sheets ID
 			'gusPage': 'od6', // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
 			'sourceName': 'raising-blended-learners-campuses', // the data source name, used internally
 			'layerName': 'raising-blended-learners-campuses-points', // layer name, used internally
-			'icon': 'raising_blended_learners_campuses_large', // the icon image name, using the name from Mapbox
-			'iconSize': 0.1, // a size multiplier for the icon, which should be saved at 1/x times the intended initial display size, so that when it gets scaled up on zooming in it will still look good
+			// 'icon': 'raising_blended_learners_campuses_large', // to make this an icon layer, use this property for the icon image name, using the name from Mapbox
+			// 'iconSize': 0.1, // a size multiplier for the icon, which should be saved at 1/x times the intended initial display size, so that when it gets scaled up on zooming in it will still look good
+			'circleColor': '#FDB500', // to get a circle layer, use this property specifying the colour
+			'circleRadius': 5,
 			'legendID': 'raising_blended_learners_campuses', // OPTIONAL: the id in the legend, so we can set it to active or inactive as appropriate. Simply leave out for layers that don't appear in the legend
 			'scalingFactor': 2.5, // OPTIONAL: how much to magnify the markers by when zooming in.  Defaults to 2.5 if not specified; set to zero to have no zoom at all.
 			'visibleOnLoad': true // set the optional final argument to true to have the layer visible on load
@@ -120,8 +137,8 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'charles-butt-scholars',
 			'layerName': 'charles-butt-scholars-points',
-			'icon': 'charles_butt_scholars_large',
-			'iconSize': 0.1,
+			'circleColor': '#BE4F1C',
+			'circleRadius': 5,
 			'legendID': 'charles_butt_scholars',
 			'visibleOnLoad': true
 		}
@@ -134,27 +151,13 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'raising-texas-teachers',
 			'layerName': 'raising-texas-teachers-points',
-			'icon': 'raising_texas_teachers_large',
-			'iconSize': 0.1,
+			'circleColor': '#41B6E6',
+			'circleRadius': 5,
 			'legendID': 'raising_texas_teachers',
 			'visibleOnLoad': true
 		}
 	);
 
-	addPointLayer(
-		map,
-		{
-			'gusID': "1CuutbSlRIgD1FsCUgQE0GyuPckgh6_zLhX-CfzQBymU",
-			'gusPage': 1,
-			'sourceName': 'raising-school-leaders',
-			'layerName': 'raising-school-leaders-points',
-			'icon': 'raising_school_leaders_large',
-			'iconSize': 0.1,
-			'legendID': 'raising_school_leaders',
-			'visibleOnLoad': true,
-			'scalingFactor': 0.5
-		}
-	);
 
 	if (showSenateDistricts) {
 		addVectorLayer(

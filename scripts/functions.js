@@ -90,11 +90,10 @@ function runWhenLoadComplete() {
 		}
 		// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 		setTimeout(function(){
+			map.moveLayer('raising-school-leaders-points');
 			map.moveLayer('raising-texas-teachers-points');
-			map.moveLayer('charles-butt-scholars-points', 'raising-texas-teachers-points');
-			map.moveLayer('raising-blended-learners-campuses-points', 'raising-texas-teachers-points');
-			map.moveLayer('raising-school-leaders-points', 'raising-blended-learners-points');
-			map.moveLayer('raising-school-leaders-points', 'charles-butt-scholars-points');
+			map.moveLayer('charles-butt-scholars-points');
+			map.moveLayer('raising-blended-learners-campuses-points');
 		}, 100);
 	}
 }
@@ -252,7 +251,6 @@ function setFilter(sourceID) {
 // Update the year slider and corresponding map filter
 function updateYearSlider(numberID, year) {
 	filterStates.year = parseInt(year, 10);
-	console.log(loadedPointLayers);
 	for (i in loadedPointLayers) {
 		setFilter(loadedPointLayers[i][0]);
 	}
@@ -451,7 +449,6 @@ function updateStatsBox() {
 				"unique_id"
 			);
 			counterID = "count." + loadedPointLayers[i][0];
-			console.log(pointsInDistrict);
 			document.getElementById(counterID).innerText = pointsInDistrict.length;
 		}
 	} else {
@@ -524,20 +521,46 @@ function addPointLayer(map, params) {
 			type: 'geojson',
 			data: jsondata
 		});
-		map.addLayer({
-			'id': params.layerName,
-			'type': 'symbol',
-			'source': params.sourceName,
-			'layout': {
-				'icon-image': params.icon,
-				'icon-size': params.iconSize,
-				'icon-allow-overlap': true,
-				'visibility': visibilityState
-			}
-		});
-		map.on("zoomend", function(){
-			map.setLayoutProperty(params.layerName, 'icon-size', (1 + (map.getZoom() / originalZoomLevel - 1) * params.scalingFactor) * params.iconSize);
-		});
+		if (params.icon !== undefined) {
+			map.addLayer({
+				'id': params.layerName,
+				'type': 'symbol',
+				'source': params.sourceName,
+				'layout': {
+					'icon-image': params.icon,
+					'icon-size': params.iconSize,
+					'icon-allow-overlap': true,
+					'visibility': visibilityState
+				}
+			});
+			map.on("zoomend", function(){
+				map.setLayoutProperty(params.layerName, 'icon-size', (1 + (map.getZoom() / originalZoomLevel - 1) * params.scalingFactor) * params.iconSize);
+			});
+		} else if (params.circleColor !== undefined) {
+			map.addLayer({
+				'id': params.layerName,
+				'type': 'circle',
+				'source': params.sourceName,
+				'layout': {
+					'visibility': visibilityState
+				},
+				'paint': {
+					'circle-radius': params.circleRadius,
+					'circle-color': params.circleColor,
+					'circle-opacity': 0.8,
+					'circle-stroke-color': params.circleColor,
+					'circle-stroke-opacity': 1,
+					'circle-stroke-width': 1,
+					'circle-blur': 0.1
+				}
+			});
+			map.on("zoomend", function(){
+				map.setPaintProperty(params.layerName, 'circle-radius', (1 + (map.getZoom() / originalZoomLevel - 1) * params.scalingFactor) * params.circleRadius);
+			});
+		} else {
+			console.log('Layer type not recognised:', params);
+			return;
+		}
 		loadedPointLayers.push([params.layerName, params.legendID]);
 		loadedPointLayerNames.push(params.layerName)
 	});
@@ -686,8 +709,6 @@ function gus_api(id, page='od6', callback) {
 			gj.features.push(feature);
 		}
 
-		console.log(id);
-		console.log(gj.features[0].properties);
 		callback(gj);
 	});
 };
