@@ -271,13 +271,9 @@ map.on('click', 'raising-blended-learners-campuses-points', function (e) {
 
 function fillpopup_rbl(data){
 	var html = "";
-	html = html + "<span class='varname'>School: </span> <span class='attribute'>" + data.school + "</span>";
+	html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.school_district + "</span>";
 	html = html + "<br />"
-	html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grades + "</span>";
-	html = html + "<br />"
-	html = html + "<span class='varname'>Subjects: </span> <span class='attribute'>" + data.subjects + "</span>";
-	html = html + "<br />"
-	html = html + "<span class='varname'>School District: </span> <span class='attribute'>" + data.district + "</span>";
+	html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grades_served + "</span>";
 	return html;
 	//this will return the string to the calling function
 
