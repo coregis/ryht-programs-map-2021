@@ -91,9 +91,9 @@ function runWhenLoadComplete() {
 		// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 		setTimeout(function(){
 			map.moveLayer('raising-school-leaders-points');
-			map.moveLayer('raising-texas-teachers-points');
 			map.moveLayer('charles-butt-scholars-points');
 			map.moveLayer('raising-blended-learners-campuses-points');
+			map.moveLayer('raising-texas-teachers-points');
 		}, 100);
 	}
 }
