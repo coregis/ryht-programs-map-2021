@@ -116,8 +116,8 @@ map.on('load', function () {
 	addPointLayer(
 		map,
 		{
-			'gusID': '1yIR3n3a7RBNlKzwU7nQsWQAPJORms_o4lmRKoST5RWU', // Google Sheets ID
-			'gusPage': 'od6', // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
+			'gusID': '108YzL2RQ1tqdCmICvoXe7W_GWFtgWhLYem-H3S4-vYA', // Google Sheets ID
+			'gusPage': 1, // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
 			'sourceName': 'raising-blended-learners-campuses', // the data source name, used internally
 			'layerName': 'raising-blended-learners-campuses-points', // layer name, used internally
 			// 'icon': 'raising_blended_learners_campuses_large', // to make this an icon layer, use this property for the icon image name, using the name from Mapbox
