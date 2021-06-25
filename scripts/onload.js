@@ -259,15 +259,17 @@ map.on('click', 'raising-blended-learners-campuses-points', function (e) {
 		.addTo(map);
 });
 
- // Change the cursor to a pointer when the mouse is over the points layer.
-	map.on('mouseenter', 'raising-blended-learners-campuses-points', function () {
-		map.getCanvas().style.cursor = 'pointer';
-	});
+// Change the cursor to a pointer when the mouse is over the points layer.
+map.on('mouseenter', 'raising-blended-learners-campuses-points', function () {
+	map.getCanvas().style.cursor = 'pointer';
+});
 
-	// Change it back to a pointer when it leaves.
-	map.on('mouseleave', 'raising-blended-learners-campuses-points', function () {
-		map.getCanvas().style.cursor = '';
-	});
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'raising-blended-learners-campuses-points', function () {
+	map.getCanvas().style.cursor = '';
+});
+
+map.on('zoomend', function() { updateStatsBox(); });
 
 function fillpopup_rbl(data){
 	var endyear = parseInt(data.year) + 4

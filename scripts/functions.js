@@ -256,7 +256,7 @@ function updateYearSlider(numberID, year) {
 	}
 	// update text in the UI
 	document.getElementById(numberID).innerText = year;
-	updateStatsBox();
+	setTimeout(function(){ updateStatsBox(); }, 100);
 }
 
 function moveYearSlider(sliderID, numberID, increment, loop=false) {
@@ -417,13 +417,7 @@ function zoomToPolygon(sourceID, coords, filterField) {
 						showHideLayer(loadedPointLayers[i][0], [loadedPointLayers[i][1], loadedPointLayers[i][1] + '_icon'], showOnly=true);
 					}
 				}
-				if (coords[4] !== '0') {
-					for (i = 500; i <= 5500; i += 500) {
-						setTimeout(function(){
-							updateStatsBox();
-						}, i);
-					}
-				} else {
+				if (coords[4] === '0') {
 					document.getElementById('statsBox').style.opacity = 0;
 				}
 			}, 1500);
