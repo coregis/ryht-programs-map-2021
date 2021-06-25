@@ -3,6 +3,10 @@ var filterStates = {
 	year: false,
 	district: false
 };
+// store the year relating to any currently-displayed popup, so it can be cleaned up if necessary
+var popupYear = 0;
+// assign all new popups to this variable so we can remove them as needed
+var popup;
 // first we check for the URL parameter '?districts=senate'.  If found, we'll show state senate districts; otherwise state house
 var urlParams = {};
 window.location.href.replace(
@@ -280,15 +284,8 @@ function moveYearSlider(sliderID, numberID, increment, loop=false) {
 
 	slider.value = desiredYear;
 	updateYearSlider(numberID, desiredYear);
-	popups = document.getElementsByClassName('popup-text-holder');
-	if (popups.length > 0) {
-		data = pickFeature(popupState.campusID, desiredYear, 'points');
-		if (data === undefined) {
-			console.log("Removing popup because campus " + popupState.campusID + " didn't exist in " + desiredYear);
-			popupState.popup.remove();
-		} else {
-			popups[0].innerHTML = fillpopup(data);
-		}
+	if (desiredYear < popupYear) {
+		popup.remove();
 	}
 }
 

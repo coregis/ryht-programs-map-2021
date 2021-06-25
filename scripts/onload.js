@@ -25,11 +25,12 @@ var loadedPolygonLayers = [];
 map.on('click', 'school_house_senate_districts_UNION-poly', function (e) {
 	var pointFeatures = map.queryRenderedFeatures(e.point, {layers: loadedPointLayerNames});
 	if (pointFeatures.length === 0) {
-		new mapboxgl.Popup()
+		popup = new mapboxgl.Popup()
 			.setLngLat(e.lngLat)
 			.setHTML(fillpopup(e.features[0].properties))
 			.addTo(map);
 	}
+	popupYear = 0;
 });
 
 
@@ -253,10 +254,11 @@ if (district.length > 0 && district[0].layer.id === 'school_house_senate_distric
 //raising blended learners campuses popup
 map.on('click', 'raising-blended-learners-campuses-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	new mapboxgl.Popup()
+	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
 		.setHTML(fillpopup_rbl(e.features[0].properties) + expandDistrictInfo(district))
 		.addTo(map);
+	popupYear = e.features[0].properties.year;
 });
 
 // Change the cursor to a pointer when the mouse is over the points layer.
@@ -287,10 +289,11 @@ function fillpopup_rbl(data){
 //charles butt scholars popup
 map.on('click', 'charles-butt-scholars-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	new mapboxgl.Popup()
+	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
 		.setHTML(fillpopup_cbs(e.features[0].properties) + expandDistrictInfo(district))
 		.addTo(map);
+	popupYear = e.features[0].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -318,10 +321,11 @@ function fillpopup_cbs(data){
 //institutes for higher education popup
 map.on('click', 'raising-texas-teachers-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	new mapboxgl.Popup()
+	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
 		.setHTML(fillpopup_rtt(e.features[0].properties) + expandDistrictInfo(district))
 		.addTo(map);
+	popupYear = e.features[0].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -348,10 +352,11 @@ function fillpopup_rtt(data){
 //raising school leaders popup
 map.on('click', 'raising-school-leaders-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	new mapboxgl.Popup()
+	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
 		.setHTML(fillpopup_rsl(e.features[0].properties) + expandDistrictInfo(district))
 		.addTo(map);
+	popupYear = e.features[0].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
