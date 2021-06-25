@@ -270,8 +270,11 @@ map.on('click', 'raising-blended-learners-campuses-points', function (e) {
 	});
 
 function fillpopup_rbl(data){
+	var endyear = parseInt(data.year) + 4
 	var html = "";
 	html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.school_district + "</span>";
+	html = html + "<br />"
+	html = html + "<span class='varname'>Years: </span> <span class='attribute'>" + data.year + " - " + endyear + "</span>";
 	html = html + "<br />"
 	html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grades_served + "</span>";
 	return html;
@@ -302,6 +305,8 @@ function fillpopup_cbs(data){
 	var html = "";
 	html = html + "<span class='varname'>Scholar's Name: </span> <span class='attribute'>" + data.full_name + "</span>";
 	html = html + "<br />"
+	html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
+	html = html + "<br />"
 	html = html + "<span class='attribute'>" + '<a href="' + data.cb_scholar_url + '"' + " target='_blank'" + '>' + data.link + '</a>'+"</span>";
 	return html;
 	//this will return the string to the calling function
@@ -330,6 +335,8 @@ map.on('click', 'raising-texas-teachers-points', function (e) {
 function fillpopup_rtt(data){
 	var html = "";
 	html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.university_name + "</span>";
+	html = html + "<br />"
+	html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
 	return html;
 	//this will return the string to the calling function
 
@@ -363,6 +370,8 @@ function fillpopup_rsl(data){
 	if (data.district) {
 		html = html + "<br />"
 		html = html + "<span class='varname'>School District: </span> <span class='attribute'>" + standardizeCase(data.district) + "</span>";
+	html = html + "<br />"
+	html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
 	}
 	return html;
 	//this will return the string to the calling function
