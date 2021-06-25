@@ -698,6 +698,7 @@ function gus_api(id, page='od6', callback) {
 					case 'x':
 					case 'xcoord':
 						feature.geometry.coordinates[0] = parseFloat(entries[e][p]);
+						break;
 					case 'latitude':
 					case 'lat':
 					case 'y':
