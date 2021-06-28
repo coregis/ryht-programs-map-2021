@@ -7,7 +7,7 @@ var bounds = [
 	];
 var map = new mapboxgl.Map({
 	container: 'map', // container id
-	style: 'mapbox://styles/core-gis/cjbcz8eyg70il2snv8ccgahf7', // stylesheet location; this is the style with markers turned OFF
+	style: 'mapbox://styles/core-gis/ckq137o0x11su18qzogi3e52t', // stylesheet location; this is the v2.3.1 style with markers turned OFF
 	center: [-98.887939, 31.821565], // starting position [lng, lat]
 	zoom: 5.5, // starting zoom
 	maxBounds: bounds // sets bounds as max
@@ -185,8 +185,8 @@ map.on('load', function () {
 			map,
 			{
 				'sourceName': 'state-house-districts',
-				'sourceID': 'state_house_districts-1vl4x8',
-				'sourceURL': 'mapbox://core-gis.9drnaiu0',
+				'sourceID': 'state_house_districts_v2-aws8ea',
+				'sourceURL': 'mapbox://core-gis.14zlmi2o',
 				'lineLayerName': 'state-house-districts-lines',
 				'lineColor': 'rgba(117, 137, 77, 0.5)',
 				'legendID': 'state_house_districts',
