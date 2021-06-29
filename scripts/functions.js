@@ -579,8 +579,7 @@ function addVectorLayer(map, params) {
 					'line-color': params.lineColor,
 					'line-width': 1
 				},
-			},
-			params.displayBehind
+			}
 		);
 		if (params.legendID !== undefined) {
 			loadedLineLayers.push([params.lineLayerName, params.legendID]);
