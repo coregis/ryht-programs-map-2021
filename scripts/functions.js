@@ -234,19 +234,29 @@ function setFilter(sourceID) {
 				['<=', 'year', filterStates.year.toString()]
 			);
 		}
-		/*
+		console.log(sourceID, filterStates.year, filterStates.year-2007);
 		map.setPaintProperty(
 			sourceID,
-			'icon-opacity',
+			'circle-opacity',
 			[
 				"interpolate",
-				["linear"],
-				['-', filterStates.year, ['number', ['get', 'year']]],
-				0, 1,
-				(filterStates.year - 2008 - 1), 0
+				["exponential", 1.5],
+				['to-number', ['get', 'year']],
+				2007, 0,
+				filterStates.year, 0.8
 			]
 		);
-		*/
+		map.setPaintProperty(
+			sourceID,
+			'circle-stroke-opacity',
+			[
+				"interpolate",
+				["exponential", 1.2],
+				['to-number', ['get', 'year']],
+				2007, 0,
+				filterStates.year, 0.8
+			]
+		);
 	} else {
 		console.log('something`s wrong, there should never be no year filter', filterStates);
 	}
@@ -538,9 +548,9 @@ function addPointLayer(map, params) {
 				'paint': {
 					'circle-radius': params.circleRadius,
 					'circle-color': params.circleColor,
-					'circle-opacity': 0.8,
+					'circle-opacity': 0,
 					'circle-stroke-color': params.circleColor,
-					'circle-stroke-opacity': 1,
+					'circle-stroke-opacity': 0,
 					'circle-stroke-width': 1,
 					'circle-blur': 0.1
 				}
