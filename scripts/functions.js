@@ -234,15 +234,14 @@ function setFilter(sourceID) {
 				['<=', 'year', filterStates.year.toString()]
 			);
 		}
-		console.log(sourceID, filterStates.year, filterStates.year-2007);
 		map.setPaintProperty(
 			sourceID,
 			'circle-opacity',
 			[
 				"interpolate",
-				["exponential", 1.5],
+				["exponential", 1.3],
 				['to-number', ['get', 'year']],
-				2007, 0,
+				2006, 0,
 				filterStates.year, 0.8
 			]
 		);
@@ -251,9 +250,9 @@ function setFilter(sourceID) {
 			'circle-stroke-opacity',
 			[
 				"interpolate",
-				["exponential", 1.2],
+				["linear"],
 				['to-number', ['get', 'year']],
-				2007, 0,
+				2006, 0.1,
 				filterStates.year, 0.8
 			]
 		);
