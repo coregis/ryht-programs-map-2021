@@ -252,8 +252,8 @@ function setFilter(sourceID) {
 				"interpolate",
 				["linear"],
 				['to-number', ['get', 'year']],
-				2006, 0.1,
-				filterStates.year, 0.8
+				2006, 0,
+				filterStates.year, 1
 			]
 		);
 	} else {
