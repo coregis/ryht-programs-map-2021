@@ -234,13 +234,18 @@ function setFilter(sourceID) {
 				['<=', 'year', filterStates.year.toString()]
 			);
 		}
+		if (sourceID.includes("raising-blended-learners")) {
+			termLength = 4;
+		} else {
+			termLength = 1;
+		}
 		map.setPaintProperty(
 			sourceID,
 			'circle-opacity',
 			[
 				"interpolate",
 				["exponential", 1.3],
-				['to-number', ['get', 'year']],
+				['+', ['to-number', ['get', 'year']], (termLength - 1)],
 				2006, 0,
 				filterStates.year, 0.8
 			]
@@ -251,7 +256,7 @@ function setFilter(sourceID) {
 			[
 				"interpolate",
 				["linear"],
-				['to-number', ['get', 'year']],
+				['+', ['to-number', ['get', 'year']], (termLength - 1)],
 				2006, 0,
 				filterStates.year, 1
 			]
