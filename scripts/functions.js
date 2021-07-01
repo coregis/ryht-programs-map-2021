@@ -524,7 +524,9 @@ function addPointLayer(map, params) {
 		if (params.scalingFactor === undefined) { params.scalingFactor = 2.5; }
 		map.addSource(params.sourceName, {
 			type: 'geojson',
-			data: jsondata
+			data: jsondata,
+			cluster: true,
+			clusterRadius: 1 // only cluster points that are really on top of each other
 		});
 		if (params.icon !== undefined) {
 			map.addLayer({
@@ -546,6 +548,7 @@ function addPointLayer(map, params) {
 				'id': params.layerName,
 				'type': 'circle',
 				'source': params.sourceName,
+				'filter': ['!', ['has', 'point_count']],
 				'layout': {
 					'visibility': visibilityState
 				},
@@ -559,6 +562,24 @@ function addPointLayer(map, params) {
 					'circle-blur': 0.1
 				}
 			});
+			map.addLayer({
+				'id': (params.layerName + '-clusters'),
+				'type': 'circle',
+				'source': params.sourceName,
+				'filter': ['has', 'point_count'],
+				'layout': {
+					'visibility': visibilityState
+				},
+				'paint': {
+					'circle-radius': params.circleRadius * 3,
+					'circle-color': params.circleColor,
+					'circle-opacity': 0.5,
+					'circle-stroke-color': params.circleColor,
+					'circle-stroke-opacity': 0.8,
+					'circle-stroke-width': 1,
+					'circle-blur': 0.1
+				}
+			});
 			map.on("zoomend", function(){
 				map.setPaintProperty(params.layerName, 'circle-radius', (1 + (map.getZoom() / originalZoomLevel - 1) * params.scalingFactor) * params.circleRadius);
 			});
@@ -566,6 +587,16 @@ function addPointLayer(map, params) {
 			console.log('Layer type not recognised:', params);
 			return;
 		}
+		map.addLayer({
+			'id': (params.layerName + '-cluster-labels'),
+			'type': 'symbol',
+			'source': params.sourceName,
+			'filter': ['has', 'point_count'],
+			'layout': {
+				'text-field': '{point_count_abbreviated}',
+				'visibility': visibilityState
+			}
+		})
 		loadedPointLayers.push([params.layerName, params.legendID]);
 		loadedPointLayerNames.push(params.layerName)
 	});
