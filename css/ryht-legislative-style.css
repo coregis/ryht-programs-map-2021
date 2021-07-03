@@ -534,3 +534,30 @@ button.collapsible  {
 hr.divider {
   border-top: 1px dotted #bdbfc1;
 }
+
+
+
+/* time slider controls */
+
+input#slider {
+	height: 16px;
+	width: 85%;
+}
+
+div#slidercontrols, div#sliderbar {
+	text-align: center;
+}
+
+div#slidercontrols span, div#sliderbar input {
+	cursor: pointer;
+}
+
+span#slider_play, span#slider_stop {
+	margin: 0 1em;
+	width: 100%;
+}
+
+span#slider_stop {
+	display: none;
+}
+

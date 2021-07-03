@@ -168,21 +168,20 @@
 						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerNames=['state_house_districts']);"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
 						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts']);"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
 					</ul>
+				</div> <!-- end of div class='legend-scale' -->
 
 <!--create time slider-->
-					<div class='session' id='sliderbar'>
-						Year: <label id='active-year'></label><br />
-						<input id='slider' class='row' type='range' min='2008' max='2021' step='1' value='2008' onmouseup="moveYearSlider('slider', 'active-year', 0);"/>
-					</div>
-					<div id='slidercontrols'>
-						<span id='slider_back' onclick="moveYearSlider('slider', 'active-year', -1);" title='Go back one year'><img src="images/skip_backward.svg"></span>
-						<span id='slider_play' onclick="startYearAnimation('slider', 'active-year', 1000, 'slider_play', 'slider_stop');" title='Animate timeline'><img src="images/play.svg"></span>
-						<span id='slider_stop' onclick="stopYearAnimation('slider_play', 'slider_stop');" title='Stop animation'><img src="images/stop.svg"></span>
-						<span id='slider_forward' onclick="moveYearSlider('slider', 'active-year', 1);" title='Go forward one year'><img src="images/skip_forward.svg"></span>
+				<div class='session' id='sliderbar'>
+					Year: <label id='active-year'></label><br />
+					<input id='slider' class='row' type='range' min='2008' max='2021' step='1' value='2008' onmouseup="moveYearSlider('slider', 'active-year', 0);" />
+				</div>
+				<div id='slidercontrols'>
+					<span id='slider_back' onclick="moveYearSlider('slider', 'active-year', -1);" title='Go back one year'><img src="images/skip_backward.svg"></span>
+					<span id='slider_play' onclick="startYearAnimation('slider', 'active-year', 1000, 'slider_play', 'slider_stop');" title='Animate timeline'><img src="images/play.svg"></span>
+					<span id='slider_stop' onclick="stopYearAnimation('slider_play', 'slider_stop');" title='Stop animation'><img src="images/stop.svg"></span>
+					<span id='slider_forward' onclick="moveYearSlider('slider', 'active-year', 1);" title='Go forward one year'><img src="images/skip_forward.svg"></span>
+				</div> <!-- id='slidercontrols' -->
 
-					</div> <!-- id='slidercontrols' -->
-
-				</div> <!-- end of div class='legend-scale' -->
 				<div class='legend-source'>Source: <a href="https://www.raiseyourhandtexas.org/" target="_blank">Raise Your Hand Texas</a></div>
 				<div class='map-credit'>Map design by <a href="http://www.coregis.net/" target="_blank">CORE GIS</a></div>
 			</div> <!-- end of div id="legend" -->
