@@ -46,6 +46,10 @@ if (
 }
 // now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
 
+if (urlParams["year"]) {
+	filterStates.year = urlParams["year"];
+}
+
 
 
 
@@ -280,7 +284,7 @@ function updateYearSlider(numberID, year) {
 function moveYearSlider(sliderID, numberID, increment, loop=false) {
 	slider = document.getElementById(sliderID);
 	minYear = parseInt(slider.min, 10);
-	currentYear = parseInt(slider.value, 10);
+	currentYear = filterStates.year ? filterStates.year : parseInt(slider.value, 10);
 	maxYear = parseInt(slider.max, 10);
 
 	desiredYear = currentYear + increment;
@@ -297,6 +301,7 @@ function moveYearSlider(sliderID, numberID, increment, loop=false) {
 	}
 
 	slider.value = desiredYear;
+	updateURL(district = filterStates.district ? filterStates.district.val : '0');
 	updateYearSlider(numberID, desiredYear);
 	if (desiredYear < popupYear) {
 		popup.remove();
@@ -351,6 +356,8 @@ function updateURL(district='0') {
 		}
 		newTitle += 'District ' + district;
 	}
+	newURL += '&year=' + filterStates.year;
+	newTitle += ' in ' + filterStates.year;
 	history.pushState({id: 'zoomto'}, newTitle, newURL);
 	document.title = newTitle;
 }
