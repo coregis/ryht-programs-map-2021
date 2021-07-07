@@ -284,7 +284,7 @@ function updateYearSlider(numberID, year) {
 function moveYearSlider(sliderID, numberID, increment, loop=false) {
 	slider = document.getElementById(sliderID);
 	minYear = parseInt(slider.min, 10);
-	currentYear = filterStates.year ? filterStates.year : parseInt(slider.value, 10);
+	currentYear = filterStates.year ? parseInt(filterStates.year, 10) : parseInt(slider.value, 10);
 	maxYear = parseInt(slider.max, 10);
 
 	desiredYear = currentYear + increment;
