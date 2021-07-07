@@ -462,11 +462,7 @@ function updateStatsBox() {
 		document.getElementById("stats.year").innerText = filterStates.year;
 		for (i in loadedPointLayers) {
 			if (loadedPointLayers[i][0].includes("raising-blended-learners")) {
-				f = [
-					'all',
-					['>=', 'year', filterStates.year.toString()],
-					['<', 'year', (filterStates.year + 4).toString()]
-				];
+				f = ['<', 'year', (filterStates.year + 4).toString()];
 			} else {
 				f = ['==', 'year', filterStates.year.toString()];
 			}

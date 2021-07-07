@@ -274,7 +274,6 @@ map.on('mouseleave', 'raising-blended-learners-campuses-points', function () {
 map.on('zoomend', function() { updateStatsBox(); });
 
 function fillpopup_rbl(data){
-	console.log(data);
 	var endyear = parseInt(data.year) + 3 // 4-year terms for this program
 	var html = "";
 	html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.school_district + "</span>";
