@@ -461,8 +461,21 @@ function updateStatsBox() {
 		document.getElementById("stats.districtName").innerText = filterStates.district.val;
 		document.getElementById("stats.year").innerText = filterStates.year;
 		for (i in loadedPointLayers) {
+			if (loadedPointLayers[i][0].includes("raising-blended-learners")) {
+				console.log(filterStates.year.toString(), (filterStates.year + 4).toString());
+				f = [
+					'all',
+					['>=', 'year', filterStates.year.toString()],
+					['<', 'year', (filterStates.year + 4).toString()]
+				];
+			} else {
+				f = ['==', 'year', filterStates.year.toString()];
+			}
 			pointsInDistrict = getUniqueFeatures(
-				map.queryRenderedFeatures( { layers:[loadedPointLayers[i][0]] } ),
+				map.queryRenderedFeatures( {
+					layers: [loadedPointLayers[i][0]],
+					filter: f
+				} ),
 				"unique_id"
 			);
 			counterID = "count." + loadedPointLayers[i][0];
