@@ -449,7 +449,7 @@ function zoomToPolygon(sourceID, coords, filterField) {
 }
 
 function updateStatsBox() {
-	if (filterStates.district) { // only do anything if we have a selected district
+	if (filterStates.district && filterStates.district.val) { // only do anything if we have a selected district
 		document.getElementById('statsBox').style.opacity = 1;
 		if (filterStates.district.field.indexOf("house") > -1) {
 			document.getElementById("stats.districtType").innerText = "House";
