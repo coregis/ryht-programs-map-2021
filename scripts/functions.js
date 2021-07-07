@@ -541,7 +541,7 @@ function setVisibilityState(params) {
 function addPointLayer(map, params) {
 	gus_api(params.gusID, params.gusPage, function(jsondata) {
 		var visibilityState = setVisibilityState(params);
-		if (params.scalingFactor === undefined) { params.scalingFactor = 2.5; }
+		if (params.scalingFactor === undefined) { params.scalingFactor = 25; }
 		map.addSource(params.sourceName, {
 			type: 'geojson',
 			data: jsondata
@@ -558,9 +558,6 @@ function addPointLayer(map, params) {
 					'visibility': visibilityState
 				}
 			});
-			map.on("zoomend", function(){
-				map.setLayoutProperty(params.layerName, 'icon-size', (1 + (map.getZoom() / originalZoomLevel - 1) * params.scalingFactor) * params.iconSize);
-			});
 		} else if (params.circleColor !== undefined) {
 			map.addLayer({
 				'id': params.layerName,
@@ -570,7 +567,13 @@ function addPointLayer(map, params) {
 					'visibility': visibilityState
 				},
 				'paint': {
-					'circle-radius': params.circleRadius,
+					'circle-radius': [
+						'interpolate', ['exponential', 1.5],
+						['zoom'],
+						(originalZoomLevel - 1), params.circleRadius,
+						15, (params.circleRadius * params.scalingFactor),
+						22, (params.circleRadius * params.scalingFactor * params.scalingFactor)
+					],
 					'circle-color': params.circleColor,
 					'circle-opacity': 0,
 					'circle-stroke-color': params.circleColor,
@@ -578,9 +581,6 @@ function addPointLayer(map, params) {
 					'circle-stroke-width': 1,
 					'circle-blur': 0.1
 				}
-			});
-			map.on("zoomend", function(){
-				map.setPaintProperty(params.layerName, 'circle-radius', (1 + (map.getZoom() / originalZoomLevel - 1) * params.scalingFactor) * params.circleRadius);
 			});
 		} else {
 			console.log('Layer type not recognised:', params);
