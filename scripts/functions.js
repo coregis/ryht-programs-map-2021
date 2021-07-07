@@ -229,7 +229,7 @@ function getUniqueFeatures(array, comparatorProperty) {
 // apply map filters persistently
 function setFilter(sourceID) {
 	if (filterStates.year) {
-		if (filterStates.district) {
+		if (filterStates.district && filterStates.district.val) {
 			map.setFilter(
 				sourceID,
 				['all',
@@ -462,7 +462,6 @@ function updateStatsBox() {
 		document.getElementById("stats.year").innerText = filterStates.year;
 		for (i in loadedPointLayers) {
 			if (loadedPointLayers[i][0].includes("raising-blended-learners")) {
-				console.log(filterStates.year.toString(), (filterStates.year + 4).toString());
 				f = [
 					'all',
 					['>=', 'year', filterStates.year.toString()],
