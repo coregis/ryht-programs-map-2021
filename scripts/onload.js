@@ -362,6 +362,7 @@ function fillpopup_rtt(features){
 		html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.university_name + "</span>";
 		html = html + "<br />"
 		html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
+		html += "<hr class='divider'/>";
 	}
 	return html;
 	//this will return the string to the calling function
