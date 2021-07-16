@@ -7,7 +7,7 @@ var bounds = [
 	];
 var map = new mapboxgl.Map({
 	container: 'map', // container id
-	style: 'mapbox://styles/core-gis/cjbcz8eyg70il2snv8ccgahf7', // stylesheet location; this is the style with markers turned OFF
+	style: 'mapbox://styles/core-gis/ckq137o0x11su18qzogi3e52t', // stylesheet location; this is the v2.3.1 style with markers turned OFF
 	center: [-98.887939, 31.821565], // starting position [lng, lat]
 	zoom: 5.5, // starting zoom
 	maxBounds: bounds // sets bounds as max
@@ -25,11 +25,12 @@ var loadedPolygonLayers = [];
 map.on('click', 'school_house_senate_districts_UNION-poly', function (e) {
 	var pointFeatures = map.queryRenderedFeatures(e.point, {layers: loadedPointLayerNames});
 	if (pointFeatures.length === 0) {
-		new mapboxgl.Popup()
+		popup = new mapboxgl.Popup()
 			.setLngLat(e.lngLat)
 			.setHTML(fillpopup(e.features[0].properties))
 			.addTo(map);
 	}
+	popupYear = 0;
 });
 
 
@@ -101,15 +102,32 @@ map.on('load', function () {
 	addPointLayer(
 		map,
 		{
-			'gusID': '1yIR3n3a7RBNlKzwU7nQsWQAPJORms_o4lmRKoST5RWU', // Google Sheets ID
-			'gusPage': 'od6', // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
+			'gusID': "1CuutbSlRIgD1FsCUgQE0GyuPckgh6_zLhX-CfzQBymU",
+			'gusPage': 1,
+			'sourceName': 'raising-school-leaders',
+			'layerName': 'raising-school-leaders-points',
+			'circleColor': '#005BAD',
+			'circleRadius': 4,
+			'legendID': 'raising_school_leaders',
+			'visibleOnLoad': true,
+			'scalingFactor': 10
+		}
+	);
+
+	addPointLayer(
+		map,
+		{
+			'gusID': '108YzL2RQ1tqdCmICvoXe7W_GWFtgWhLYem-H3S4-vYA', // Google Sheets ID
+			'gusPage': 1, // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
 			'sourceName': 'raising-blended-learners-campuses', // the data source name, used internally
 			'layerName': 'raising-blended-learners-campuses-points', // layer name, used internally
-			'icon': 'raising_blended_learners_campuses_large', // the icon image name, using the name from Mapbox
-			'iconSize': 0.1, // a size multiplier for the icon, which should be saved at 1/x times the intended initial display size, so that when it gets scaled up on zooming in it will still look good
+			// 'icon': 'raising_blended_learners_campuses_large', // to make this an icon layer, use this property for the icon image name, using the name from Mapbox
+			// 'iconSize': 0.1, // a size multiplier for the icon, which should be saved at 1/x times the intended initial display size, so that when it gets scaled up on zooming in it will still look good
+			'circleColor': '#FDB500', // to get a circle layer, use this property specifying the colour
+			'circleRadius': 4,
 			'legendID': 'raising_blended_learners_campuses', // OPTIONAL: the id in the legend, so we can set it to active or inactive as appropriate. Simply leave out for layers that don't appear in the legend
-			'scalingFactor': 2.5, // OPTIONAL: how much to magnify the markers by when zooming in.  Defaults to 2.5 if not specified; set to zero to have no zoom at all.
-			'visibleOnLoad': false // set the optional final argument to true to have the layer visible on load
+			'scalingFactor': 25, // OPTIONAL: how much to magnify the markers by when zooming in.  Defaults to 25 if not specified; set to 1 to have no zoom at all.
+			'visibleOnLoad': true // set the optional final argument to true to have the layer visible on load
 		}
 	);
 
@@ -120,9 +138,10 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'charles-butt-scholars',
 			'layerName': 'charles-butt-scholars-points',
-			'icon': 'charles_butt_scholars_large',
-			'iconSize': 0.1,
-			'legendID': 'charles_butt_scholars'
+			'circleColor': '#BE4F1C',
+			'circleRadius': 4,
+			'legendID': 'charles_butt_scholars',
+			'visibleOnLoad': true
 		}
 	);
 
@@ -133,25 +152,13 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'raising-texas-teachers',
 			'layerName': 'raising-texas-teachers-points',
-			'icon': 'raising_texas_teachers_large',
-			'iconSize': 0.1,
-			'legendID': 'raising_texas_teachers'
+			'circleColor': '#41B6E6',
+			'circleRadius': 4,
+			'legendID': 'raising_texas_teachers',
+			'visibleOnLoad': true
 		}
 	);
 
-	addPointLayer(
-		map,
-		{
-			'gusID': "1CuutbSlRIgD1FsCUgQE0GyuPckgh6_zLhX-CfzQBymU",
-			'gusPage': 1,
-			'sourceName': 'raising-school-leaders',
-			'layerName': 'raising-school-leaders-points',
-			'icon': 'raising_school_leaders_large',
-			'iconSize': 0.1,
-			'legendID': 'raising_school_leaders',
-			'scalingFactor': 0.5
-		}
-	);
 
 	if (showSenateDistricts) {
 		addVectorLayer(
@@ -178,8 +185,8 @@ map.on('load', function () {
 			map,
 			{
 				'sourceName': 'state-house-districts',
-				'sourceID': 'state_house_districts-1vl4x8',
-				'sourceURL': 'mapbox://core-gis.9drnaiu0',
+				'sourceID': 'state_house_districts_v2-aws8ea',
+				'sourceURL': 'mapbox://core-gis.14zlmi2o',
 				'lineLayerName': 'state-house-districts-lines',
 				'lineColor': 'rgba(117, 137, 77, 0.5)',
 				'legendID': 'state_house_districts',
@@ -209,6 +216,11 @@ map.on('load', function () {
 		}
 	);
 
+	//add interactivity to the time slider
+	document.getElementById('slider').addEventListener('input', function(e) {
+		updateYearSlider('active-year', e.target.value);
+	});
+
 	runWhenLoadComplete();
 });
 
@@ -226,7 +238,7 @@ function expandDistrictInfo(district) {
 // make sure we have a district to use
 if (district.length > 0 && district[0].layer.id === 'school_house_senate_districts_UNION-poly') {
 	data = district[0].properties;
-	var html = "<hr class='divider'/>";
+	var html = "";
 	html += "<span class='varname'>";
 	html += showHouseDistricts ? "House District: " : "Senate District: ";
 	html += "</span> <span class='attribute'>";
@@ -242,31 +254,40 @@ if (district.length > 0 && district[0].layer.id === 'school_house_senate_distric
 //raising blended learners campuses popup
 map.on('click', 'raising-blended-learners-campuses-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	new mapboxgl.Popup()
+	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
+	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_rbl(e.features[0].properties) + expandDistrictInfo(district))
+		.setHTML(fillpopup_rbl(e.features) + expandDistrictInfo(district))
 		.addTo(map);
+	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
+	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
- // Change the cursor to a pointer when the mouse is over the points layer.
-	map.on('mouseenter', 'raising-blended-learners-campuses-points', function () {
-		map.getCanvas().style.cursor = 'pointer';
-	});
+// Change the cursor to a pointer when the mouse is over the points layer.
+map.on('mouseenter', 'raising-blended-learners-campuses-points', function () {
+	map.getCanvas().style.cursor = 'pointer';
+});
 
-	// Change it back to a pointer when it leaves.
-	map.on('mouseleave', 'raising-blended-learners-campuses-points', function () {
-		map.getCanvas().style.cursor = '';
-	});
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'raising-blended-learners-campuses-points', function () {
+	map.getCanvas().style.cursor = '';
+});
 
-function fillpopup_rbl(data){
-	var html = "";
-	html = html + "<span class='varname'>School: </span> <span class='attribute'>" + data.school + "</span>";
-	html = html + "<br />"
-	html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grades + "</span>";
-	html = html + "<br />"
-	html = html + "<span class='varname'>Subjects: </span> <span class='attribute'>" + data.subjects + "</span>";
-	html = html + "<br />"
-	html = html + "<span class='varname'>School District: </span> <span class='attribute'>" + data.district + "</span>";
+map.on('zoomend', function() { updateStatsBox(); });
+
+function fillpopup_rbl(features){
+	let html = "";
+	for (i in features) {
+		let data = features[i].properties;
+		let endyear = parseInt(data.year) + 3 // 4-year terms for this program
+		html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.school_district + "</span>";
+		html = html + "<br />"
+		html = html + "<span class='varname'>Years: </span> <span class='attribute'>" + data.year + " - " + endyear + "</span>";
+		html = html + "<br />"
+		html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grades_served + "</span>";
+		html += "<hr class='divider'/>";
+	}
 	return html;
 	//this will return the string to the calling function
 
@@ -275,10 +296,14 @@ function fillpopup_rbl(data){
 //charles butt scholars popup
 map.on('click', 'charles-butt-scholars-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	new mapboxgl.Popup()
+	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
+	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_cbs(e.features[0].properties) + expandDistrictInfo(district))
+		.setHTML(fillpopup_cbs(e.features) + expandDistrictInfo(district))
 		.addTo(map);
+	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
+	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -291,11 +316,17 @@ map.on('click', 'charles-butt-scholars-points', function (e) {
 		map.getCanvas().style.cursor = '';
 	});
 
-function fillpopup_cbs(data){
-	var html = "";
-	html = html + "<span class='varname'>Scholar's Name: </span> <span class='attribute'>" + data.full_name + "</span>";
-	html = html + "<br />"
-	html = html + "<span class='attribute'>" + '<a href="' + data.cb_scholar_url + '"' + " target='_blank'" + '>' + data.link + '</a>'+"</span>";
+function fillpopup_cbs(features){
+	let html = "";
+	for (i in features) {
+		let data = features[i].properties;
+		html = html + "<span class='varname'>Scholar's Name: </span> <span class='attribute'>" + data.full_name + "</span>";
+		html = html + "<br />"
+		html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
+		html = html + "<br />"
+		html = html + "<span class='attribute'>" + '<a href="' + data.cb_scholar_url + '"' + " target='_blank'" + '>' + data.link + '</a>'+"</span>";
+		html += "<hr class='divider'/>";
+	}
 	return html;
 	//this will return the string to the calling function
 
@@ -304,10 +335,14 @@ function fillpopup_cbs(data){
 //institutes for higher education popup
 map.on('click', 'raising-texas-teachers-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	new mapboxgl.Popup()
+	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
+	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_rtt(e.features[0].properties) + expandDistrictInfo(district))
+		.setHTML(fillpopup_rtt(e.features) + expandDistrictInfo(district))
 		.addTo(map);
+	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
+	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -320,9 +355,15 @@ map.on('click', 'raising-texas-teachers-points', function (e) {
 		map.getCanvas().style.cursor = '';
 	});
 
-function fillpopup_rtt(data){
+function fillpopup_rtt(features){
 	var html = "";
-	html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.university_name + "</span>";
+	for (i in features) {
+		let data = features[i].properties;
+		html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.university_name + "</span>";
+		html = html + "<br />"
+		html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
+		html += "<hr class='divider'/>";
+	}
 	return html;
 	//this will return the string to the calling function
 
@@ -332,10 +373,14 @@ function fillpopup_rtt(data){
 //raising school leaders popup
 map.on('click', 'raising-school-leaders-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	new mapboxgl.Popup()
+	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
+	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_rsl(e.features[0].properties) + expandDistrictInfo(district))
+		.setHTML(fillpopup_rsl(e.features) + expandDistrictInfo(district))
 		.addTo(map);
+	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
+	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -348,16 +393,21 @@ map.on('click', 'raising-school-leaders-points', function (e) {
 		map.getCanvas().style.cursor = '';
 	});
 
-function fillpopup_rsl(data){
-	var html = "";
-	html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.institute + "</span>";
-	html = html + "<br />"
-	html = html + "<span class='varname'>Campus: </span> <span class='attribute'>" + standardizeCase(data.campus) + "</span>";
-	if (data.district) {
+function fillpopup_rsl(features){
+	let html = "";
+	for (i in features) {
+		let data = features[i].properties;
+		html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.institute + "</span>";
 		html = html + "<br />"
-		html = html + "<span class='varname'>School District: </span> <span class='attribute'>" + standardizeCase(data.district) + "</span>";
+		html = html + "<span class='varname'>Campus: </span> <span class='attribute'>" + standardizeCase(data.campus) + "</span>";
+		if (data.district) {
+			html = html + "<br />"
+			html = html + "<span class='varname'>School District: </span> <span class='attribute'>" + standardizeCase(data.district) + "</span>";
+			html = html + "<br />"
+			html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
+			html += "<hr class='divider'/>";
+		}
 	}
 	return html;
 	//this will return the string to the calling function
-
 }

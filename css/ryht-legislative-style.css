@@ -192,7 +192,7 @@ ul{
 }
 #raising_blended_learners_campuses
 {
-	background:url(../markers/raising_blended_learners_campuses_eye.svg) left center;
+	background:url(../markers/raising_blended_learners_campuses_eye_circle.svg) left center;
 	width:28px;
 	height:12px;
 	display: block;
@@ -200,7 +200,7 @@ ul{
 }
 #charles_butt_scholars
 {
-	background:url(../markers/charles_butt_scholars_eye.svg) left center;
+	background:url(../markers/charles_butt_scholars_eye_circle.svg) left center;
 	width:28px;
 	height:14px;
 	display: block;
@@ -208,7 +208,7 @@ ul{
 }
 #charles_butt_scholars_icon
 {
-	background:url(../markers/charles_butt_scholars_eye.svg) left center;
+	background:url(../markers/charles_butt_scholars_circle.svg) left center;
 	width: 14px;
 	height: 14px;
 	display: block;
@@ -217,7 +217,7 @@ ul{
 }
 #raising_texas_teachers
 {
-	background:url(../markers/raising_texas_teachers_eye.svg) left center;
+	background:url(../markers/raising_texas_teachers_eye_circle.svg) left center;
 	width:28px;
 	height:14px;
 	display: block;
@@ -225,7 +225,7 @@ ul{
 }
 #raising_texas_teachers_icon
 {
-	background:url(../markers/raising_texas_teachers_eye.svg) left center;
+	background:url(../markers/raising_texas_teachers_circle.svg) left center;
 	width:14px;
 	height:14px;
 	display: block;
@@ -234,7 +234,7 @@ ul{
 }
 #raising_school_leaders
 {
-	background:url(../markers/raising_school_leaders_eye.svg) left center;
+	background:url(../markers/raising_school_leaders_eye_circle.svg) left center;
 	width:28px;
 	height:14px;
 	display: block;
@@ -534,3 +534,30 @@ button.collapsible  {
 hr.divider {
   border-top: 1px dotted #bdbfc1;
 }
+
+
+
+/* time slider controls */
+
+input#slider {
+	height: 16px;
+	width: 85%;
+}
+
+div#slidercontrols, div#sliderbar {
+	text-align: center;
+}
+
+div#slidercontrols span, div#sliderbar input {
+	cursor: pointer;
+}
+
+span#slider_play, span#slider_stop {
+	margin: 0 1em;
+	width: 100%;
+}
+
+span#slider_stop {
+	display: none;
+}
+

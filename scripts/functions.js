@@ -1,5 +1,12 @@
 // store this as a global variable so that the stats box can always access the current value
-var activeDistrict = '0';
+var filterStates = {
+	year: false,
+	district: false
+};
+// store the year relating to any currently-displayed popup, so it can be cleaned up if necessary
+var popupYear = 0;
+// assign all new popups to this variable so we can remove them as needed
+var popup;
 // first we check for the URL parameter '?districts=senate'.  If found, we'll show state senate districts; otherwise state house
 var urlParams = {};
 window.location.href.replace(
@@ -36,9 +43,18 @@ if (
 ) {
 	showHouseDistricts = false;
 	showSenateDistricts = true;
+	filterStates.district = {"field": "house_dist"};
+} else {
+	filterStates.district = {"field": "senate_dist"};
 }
 // now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
 
+if (urlParams["year"]) {
+	filterStates.year = urlParams["year"];
+}
+if (urlParams["zoomto"]) {
+	filterStates.district.val = urlParams["zoomto"];
+}
 
 
 
@@ -76,6 +92,7 @@ function runWhenLoadComplete() {
 		setTimeout(runWhenLoadComplete, 100);
 	}
 	else {
+		moveYearSlider('slider', 'active-year', 0); // calling this with a 0 increment will make sure that the filter, caption and slider position all match.  Without doing this, the browser seems to keep the slider position between refreshes, but reset the filter and caption so they get out of sync.
 		if (showHouseDistricts) {
 			populateZoomControl("house-districts-control", "state-house-districts", "District", "Texas House Districts");
 			map.moveLayer('state-house-districts-lines');
@@ -86,10 +103,10 @@ function runWhenLoadComplete() {
 		}
 		// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 		setTimeout(function(){
-			map.moveLayer('charles-butt-scholars-points', 'raising-texas-teachers-points');
-			map.moveLayer('raising-blended-learners-campuses-points', 'raising-texas-teachers-points');
-			map.moveLayer('raising-school-leaders-points', 'raising-blended-learners-points');
-			map.moveLayer('raising-school-leaders-points', 'charles-butt-scholars-points');
+			map.moveLayer('raising-school-leaders-points');
+			map.moveLayer('charles-butt-scholars-points');
+			map.moveLayer('raising-blended-learners-campuses-points');
+			map.moveLayer('raising-texas-teachers-points');
 		}, 100);
 	}
 }
@@ -209,6 +226,116 @@ function getUniqueFeatures(array, comparatorProperty) {
 	return uniqueFeatures;
 }
 
+// apply map filters persistently
+function setFilter(sourceID) {
+	if (filterStates.year) {
+		if (filterStates.district && filterStates.district.val) {
+			map.setFilter(
+				sourceID,
+				['all',
+					['<=', 'year', filterStates.year.toString()],
+					['==', filterStates.district.field, filterStates.district.val.toString()]
+				]
+			);
+		} else {
+			map.setFilter(
+				sourceID,
+				['<=', 'year', filterStates.year.toString()]
+			);
+		}
+		if (sourceID.includes("raising-blended-learners")) {
+			termLength = 4;
+		} else {
+			termLength = 1;
+		}
+		map.setPaintProperty(
+			sourceID,
+			'circle-opacity',
+			[
+				"interpolate",
+				["exponential", 1.3],
+				['+', ['to-number', ['get', 'year']], (termLength - 1)],
+				2006, 0,
+				filterStates.year, 0.8
+			]
+		);
+		map.setPaintProperty(
+			sourceID,
+			'circle-stroke-opacity',
+			[
+				"interpolate",
+				["linear"],
+				['+', ['to-number', ['get', 'year']], (termLength - 1)],
+				2006, 0,
+				filterStates.year, 1
+			]
+		);
+	} else {
+		console.log('something`s wrong, there should never be no year filter', filterStates);
+	}
+}
+
+// Update the year slider and corresponding map filter
+function updateYearSlider(numberID, year) {
+	filterStates.year = parseInt(year, 10);
+	for (i in loadedPointLayers) {
+		setFilter(loadedPointLayers[i][0]);
+	}
+	// update text in the UI
+	document.getElementById(numberID).innerText = year;
+	setTimeout(function(){ updateStatsBox(); }, 100);
+}
+
+function moveYearSlider(sliderID, numberID, increment, loop=false) {
+	slider = document.getElementById(sliderID);
+	minYear = parseInt(slider.min, 10);
+	currentYear = filterStates.year ? parseInt(filterStates.year, 10) : parseInt(slider.value, 10);
+	maxYear = parseInt(slider.max, 10);
+
+	desiredYear = currentYear + increment;
+
+	if (loop) { // if we're looping then wrap any overflow around
+		if (desiredYear > maxYear) {desiredYear = minYear;}
+		else if (desiredYear < minYear) {desiredYear = maxYear;}
+	}
+	else { // if not looping then keep changes within the min/max bounds
+		if ((desiredYear > maxYear) || (desiredYear < minYear)) {
+			desiredYear = currentYear;
+			console.log('Hacking too much time');
+		}
+	}
+
+	slider.value = desiredYear;
+	updateURL(district = filterStates.district ? filterStates.district.val : '0');
+	updateYearSlider(numberID, desiredYear);
+	if (desiredYear < popupYear) {
+		popup.remove();
+	}
+}
+
+function animateYearSlider(sliderID, numberID, delay) {
+	if (animationRunning) {
+		moveYearSlider(sliderID, numberID, 1, loop=true);
+		setTimeout(
+			function() {animateYearSlider(sliderID, numberID, delay)},
+			delay
+		);
+	}
+}
+
+function startYearAnimation(sliderID, numberID, delay, playID, stopID) {
+	animationRunning = true;
+	document.getElementById(playID).style.display = 'none';
+	document.getElementById(stopID).style.display = 'inline';
+	animateYearSlider(sliderID, numberID, delay);
+}
+
+function stopYearAnimation(playID, stopID) {
+	animationRunning = false;
+	document.getElementById(playID).style.display = 'inline';
+	document.getElementById(stopID).style.display = 'none';
+}
+
 function updateURL(district='0') {
 	var newURL = window.location.pathname;
 	var newTitle = 'Raise Your Hand Texas programs'
@@ -234,6 +361,8 @@ function updateURL(district='0') {
 		}
 		newTitle += 'District ' + district;
 	}
+	newURL += '&year=' + filterStates.year;
+	newTitle += ' in ' + filterStates.year;
 	history.pushState({id: 'zoomto'}, newTitle, newURL);
 	document.title = newTitle;
 }
@@ -262,6 +391,14 @@ function zoomToPolygon(sourceID, coords, filterField) {
 		map.fitBounds(bbox, options={padding: 10, duration: 3000});
 		if (filterField !== undefined) {
 			setTimeout(function(){
+				if (coords[4] === '0') {
+					filterStates.district = false;
+				} else {
+					filterStates.district = {
+						'field': filterField,
+						'val':   coords[4]
+					};
+				}
 				for (i in loadedLineLayers) {
 					showHideLayer(loadedLineLayers[i][0], [loadedLineLayers[i][1]], showOnly=true);
 					if (
@@ -296,27 +433,14 @@ function zoomToPolygon(sourceID, coords, filterField) {
 							['!=', 'District', parseInt(coords[4])]
 						);
 					}
-
 				}
 				for (i in loadedPointLayers) {
-					if (coords[4] === '0') {
-						map.setFilter(loadedPointLayers[i][0], null);
-					} else {
-						map.setFilter(
-							loadedPointLayers[i][0],
-							['==', filterField, coords[4]]
-						);
+					setFilter(loadedPointLayers[i][0]);
+					if (coords[4] != '0') {
 						showHideLayer(loadedPointLayers[i][0], [loadedPointLayers[i][1], loadedPointLayers[i][1] + '_icon'], showOnly=true);
 					}
 				}
-				activeDistrict = coords[4];
-				if (coords[4] !== '0') {
-					for (i = 500; i <= 5500; i += 1000) {
-						setTimeout(function(){
-							updateStatsBox(filterField);
-						}, i);
-					}
-				} else {
+				if (coords[4] === '0') {
 					document.getElementById('statsBox').style.opacity = 0;
 				}
 			}, 1500);
@@ -324,20 +448,29 @@ function zoomToPolygon(sourceID, coords, filterField) {
 	}
 }
 
-function updateStatsBox(districtType) {
-	if (activeDistrict !== '0') { // only do anything if we have a selected district
+function updateStatsBox() {
+	if (filterStates.district && filterStates.district.val) { // only do anything if we have a selected district
 		document.getElementById('statsBox').style.opacity = 1;
-		if (districtType.indexOf("house") > -1) {
+		if (filterStates.district.field.indexOf("house") > -1) {
 			document.getElementById("stats.districtType").innerText = "House";
-		} else if (districtType.indexOf("senate") > -1) {
+		} else if (filterStates.district.field.indexOf("senate") > -1) {
 			document.getElementById("stats.districtType").innerText = "Senate";
 		} else {
 			document.getElementById("stats.districtType").innerText = "";
 		}
-		document.getElementById("stats.districtName").innerText = activeDistrict;
+		document.getElementById("stats.districtName").innerText = filterStates.district.val;
+		document.getElementById("stats.year").innerText = filterStates.year;
 		for (i in loadedPointLayers) {
+			if (loadedPointLayers[i][0].includes("raising-blended-learners")) {
+				f = ['<', 'year', (filterStates.year + 4).toString()];
+			} else {
+				f = ['==', 'year', filterStates.year.toString()];
+			}
 			pointsInDistrict = getUniqueFeatures(
-				map.queryRenderedFeatures( { layers:[loadedPointLayers[i][0]] } ),
+				map.queryRenderedFeatures( {
+					layers: [loadedPointLayers[i][0]],
+					filter: f
+				} ),
 				"unique_id"
 			);
 			counterID = "count." + loadedPointLayers[i][0];
@@ -408,25 +541,51 @@ function setVisibilityState(params) {
 function addPointLayer(map, params) {
 	gus_api(params.gusID, params.gusPage, function(jsondata) {
 		var visibilityState = setVisibilityState(params);
-		if (params.scalingFactor === undefined) { params.scalingFactor = 2.5; }
+		if (params.scalingFactor === undefined) { params.scalingFactor = 25; }
 		map.addSource(params.sourceName, {
 			type: 'geojson',
 			data: jsondata
 		});
-		map.addLayer({
-			'id': params.layerName,
-			'type': 'symbol',
-			'source': params.sourceName,
-			'layout': {
-				'icon-image': params.icon,
-				'icon-size': params.iconSize,
-				'icon-allow-overlap': true,
-				'visibility': visibilityState
-			}
-		});
-		map.on("zoomend", function(){
-			map.setLayoutProperty(params.layerName, 'icon-size', (1 + (map.getZoom() / originalZoomLevel - 1) * params.scalingFactor) * params.iconSize);
-		});
+		if (params.icon !== undefined) {
+			map.addLayer({
+				'id': params.layerName,
+				'type': 'symbol',
+				'source': params.sourceName,
+				'layout': {
+					'icon-image': params.icon,
+					'icon-size': params.iconSize,
+					'icon-allow-overlap': true,
+					'visibility': visibilityState
+				}
+			});
+		} else if (params.circleColor !== undefined) {
+			map.addLayer({
+				'id': params.layerName,
+				'type': 'circle',
+				'source': params.sourceName,
+				'layout': {
+					'visibility': visibilityState
+				},
+				'paint': {
+					'circle-radius': [
+						'interpolate', ['exponential', 1.5],
+						['zoom'],
+						(originalZoomLevel - 1), params.circleRadius,
+						15, (params.circleRadius * params.scalingFactor),
+						22, (params.circleRadius * params.scalingFactor * params.scalingFactor)
+					],
+					'circle-color': params.circleColor,
+					'circle-opacity': 0,
+					'circle-stroke-color': params.circleColor,
+					'circle-stroke-opacity': 0,
+					'circle-stroke-width': 1,
+					'circle-blur': 0.1
+				}
+			});
+		} else {
+			console.log('Layer type not recognised:', params);
+			return;
+		}
 		loadedPointLayers.push([params.layerName, params.legendID]);
 		loadedPointLayerNames.push(params.layerName)
 	});
@@ -454,8 +613,7 @@ function addVectorLayer(map, params) {
 					'line-color': params.lineColor,
 					'line-width': 1
 				},
-			},
-			params.displayBehind
+			}
 		);
 		if (params.legendID !== undefined) {
 			loadedLineLayers.push([params.lineLayerName, params.legendID]);
@@ -564,6 +722,7 @@ function gus_api(id, page='od6', callback) {
 					case 'x':
 					case 'xcoord':
 						feature.geometry.coordinates[0] = parseFloat(entries[e][p]);
+						break;
 					case 'latitude':
 					case 'lat':
 					case 'y':
