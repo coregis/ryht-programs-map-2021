@@ -373,14 +373,12 @@ function fillpopup_rtt(features){
 //raising school leaders popup
 map.on('click', 'raising-school-leaders-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
-	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	// deduplicate the list
+	features = compileUniqueArray(e.features);
 	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_rsl(e.features) + expandDistrictInfo(district))
+		.setHTML(fillpopup_rsl(features) + expandDistrictInfo(district))
 		.addTo(map);
-	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
-	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -396,7 +394,7 @@ map.on('click', 'raising-school-leaders-points', function (e) {
 function fillpopup_rsl(features){
 	let html = "";
 	for (i in features) {
-		let data = features[i].properties;
+		let data = features[i];
 		html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.institute + "</span>";
 		html = html + "<br />"
 		html = html + "<span class='varname'>Campus: </span> <span class='attribute'>" + standardizeCase(data.campus) + "</span>";
@@ -405,8 +403,12 @@ function fillpopup_rsl(features){
 			html = html + "<span class='varname'>School District: </span> <span class='attribute'>" + standardizeCase(data.district) + "</span>";
 			html = html + "<br />"
 			html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
-			html += "<hr class='divider'/>";
 		}
+		if (data.count > 1) {
+			html = html + "<br />"
+			html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
+		}
+		html += "<hr class='divider'/>";
 	}
 	return html;
 	//this will return the string to the calling function
