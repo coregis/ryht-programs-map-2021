@@ -712,7 +712,6 @@ function compileUniqueArray(features, ignoreFields=[]) {
 	features.sort((a, b) => (a.year < b.year) ? 1 : -1);
 	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
 	popupYear = features[features.length - 1].year;
-
 	return uniques
 }
 

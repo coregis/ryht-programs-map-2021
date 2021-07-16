@@ -259,8 +259,6 @@ map.on('click', 'raising-blended-learners-campuses-points', function (e) {
 		.setLngLat(e.lngLat)
 		.setHTML(fillpopup_rbl(features) + expandDistrictInfo(district))
 		.addTo(map);
-	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
-	popupYear = features[features.length - 1].year;
 });
 
 // Change the cursor to a pointer when the mouse is over the points layer.
@@ -304,8 +302,6 @@ map.on('click', 'charles-butt-scholars-points', function (e) {
 		.setLngLat(e.lngLat)
 		.setHTML(fillpopup_cbs(features) + expandDistrictInfo(district))
 		.addTo(map);
-	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
-	popupYear = features[features.length - 1].year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -346,8 +342,6 @@ map.on('click', 'raising-texas-teachers-points', function (e) {
 		.setLngLat(e.lngLat)
 		.setHTML(fillpopup_rtt(features) + expandDistrictInfo(district))
 		.addTo(map);
-	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
-	popupYear = features[features.length - 1].year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
