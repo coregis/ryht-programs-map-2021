@@ -383,6 +383,9 @@ function zoomToPolygon(sourceID, coords, filterField) {
 			[coords[2], coords[3]]
 		];
 		updateURL(district=coords[4]);
+		if (coords[4] != '0') {
+			filterStates.district.val = coords[4];
+		}
 		if (showHouseDistricts) {
 			showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
 		} else if (showSenateDistricts) {
