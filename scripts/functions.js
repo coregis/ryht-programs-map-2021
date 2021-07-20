@@ -43,9 +43,9 @@ if (
 ) {
 	showHouseDistricts = false;
 	showSenateDistricts = true;
-	filterStates.district = {"field": "house_dist"};
-} else {
 	filterStates.district = {"field": "senate_dist"};
+} else {
+	filterStates.district = {"field": "house_dist"};
 }
 // now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
 
