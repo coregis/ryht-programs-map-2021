@@ -43,9 +43,9 @@ if (
 ) {
 	showHouseDistricts = false;
 	showSenateDistricts = true;
-	filterStates.district = {"field": "house_dist"};
-} else {
 	filterStates.district = {"field": "senate_dist"};
+} else {
+	filterStates.district = {"field": "house_dist"};
 }
 // now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
 
@@ -383,6 +383,9 @@ function zoomToPolygon(sourceID, coords, filterField) {
 			[coords[2], coords[3]]
 		];
 		updateURL(district=coords[4]);
+		if (coords[4] != '0') {
+			filterStates.district.val = coords[4];
+		}
 		if (showHouseDistricts) {
 			showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
 		} else if (showSenateDistricts) {
