@@ -678,6 +678,45 @@ function fetchJSONFile(path, callback) {
 
 
 
+// make text signature of an object for comparing
+function objectSig(obj, ignoreFields) {
+	let sig = '';
+	for (j in obj) {
+		if (ignoreFields.indexOf(j) === -1) {
+			sig += j + obj[j];
+		}
+	}
+	return sig
+}
+
+
+
+// make an array with no duplicate features, and a count of source duplicates
+function compileUniqueArray(features, ignoreFields=[]) {
+	let uniques = [];
+	let sigs = [];
+	ignoreFields.push('latitude', 'longitude', 'count', 'unique_id'); // we always want to ignore these fields
+	for (i in features) {
+		let data = features[i].properties;
+		let sig = objectSig(data, ignoreFields);
+		let idx = sigs.indexOf(sig);
+		if (idx > -1) {
+			uniques[idx].count += 1;
+		} else {
+			data.count = 1;
+			uniques.push(data);
+			sigs.push(sig);
+		}
+	}
+	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
+	features.sort((a, b) => (a.year < b.year) ? 1 : -1);
+	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
+	popupYear = features[features.length - 1].properties.year;
+	return uniques
+}
+
+
+
 function gus_api(id, page='od6', callback) {
 	const url = `https://spreadsheets.google.com/feeds/cells/${id}/${page}/public/basic?alt=json`;
 

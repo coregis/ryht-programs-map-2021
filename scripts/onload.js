@@ -254,14 +254,11 @@ if (district.length > 0 && district[0].layer.id === 'school_house_senate_distric
 //raising blended learners campuses popup
 map.on('click', 'raising-blended-learners-campuses-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
-	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	features = compileUniqueArray(e.features);
 	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_rbl(e.features) + expandDistrictInfo(district))
+		.setHTML(fillpopup_rbl(features) + expandDistrictInfo(district))
 		.addTo(map);
-	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
-	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
 // Change the cursor to a pointer when the mouse is over the points layer.
@@ -279,13 +276,17 @@ map.on('zoomend', function() { updateStatsBox(); });
 function fillpopup_rbl(features){
 	let html = "";
 	for (i in features) {
-		let data = features[i].properties;
+		let data = features[i];
 		let endyear = parseInt(data.year) + 3 // 4-year terms for this program
 		html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.school_district + "</span>";
 		html = html + "<br />"
 		html = html + "<span class='varname'>Years: </span> <span class='attribute'>" + data.year + " - " + endyear + "</span>";
 		html = html + "<br />"
 		html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grades_served + "</span>";
+		if (data.count > 1) {
+			html = html + "<br />"
+			html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
+		}
 		html += "<hr class='divider'/>";
 	}
 	return html;
@@ -296,14 +297,11 @@ function fillpopup_rbl(features){
 //charles butt scholars popup
 map.on('click', 'charles-butt-scholars-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
-	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	features = compileUniqueArray(e.features);
 	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_cbs(e.features) + expandDistrictInfo(district))
+		.setHTML(fillpopup_cbs(features) + expandDistrictInfo(district))
 		.addTo(map);
-	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
-	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -319,12 +317,16 @@ map.on('click', 'charles-butt-scholars-points', function (e) {
 function fillpopup_cbs(features){
 	let html = "";
 	for (i in features) {
-		let data = features[i].properties;
+		let data = features[i];
 		html = html + "<span class='varname'>Scholar's Name: </span> <span class='attribute'>" + data.full_name + "</span>";
 		html = html + "<br />"
 		html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
 		html = html + "<br />"
 		html = html + "<span class='attribute'>" + '<a href="' + data.cb_scholar_url + '"' + " target='_blank'" + '>' + data.link + '</a>'+"</span>";
+		if (data.count > 1) {
+			html = html + "<br />"
+			html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
+		}
 		html += "<hr class='divider'/>";
 	}
 	return html;
@@ -335,14 +337,11 @@ function fillpopup_cbs(features){
 //institutes for higher education popup
 map.on('click', 'raising-texas-teachers-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
-	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	features = compileUniqueArray(e.features);
 	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_rtt(e.features) + expandDistrictInfo(district))
+		.setHTML(fillpopup_rtt(features) + expandDistrictInfo(district))
 		.addTo(map);
-	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
-	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -358,10 +357,14 @@ map.on('click', 'raising-texas-teachers-points', function (e) {
 function fillpopup_rtt(features){
 	var html = "";
 	for (i in features) {
-		let data = features[i].properties;
+		let data = features[i];
 		html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.university_name + "</span>";
 		html = html + "<br />"
 		html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
+		if (data.count > 1) {
+			html = html + "<br />"
+			html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
+		}
 		html += "<hr class='divider'/>";
 	}
 	return html;
@@ -373,14 +376,12 @@ function fillpopup_rtt(features){
 //raising school leaders popup
 map.on('click', 'raising-school-leaders-points', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
-	// sort the list, as per https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
-	e.features.sort((a, b) => (a.properties.year < b.properties.year) ? 1 : -1);
+	// deduplicate the list
+	features = compileUniqueArray(e.features);
 	popup = new mapboxgl.Popup()
 		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_rsl(e.features) + expandDistrictInfo(district))
+		.setHTML(fillpopup_rsl(features) + expandDistrictInfo(district))
 		.addTo(map);
-	// use the earliest date for popupYear, because its used to hide this popup if the display year is set to before any of the contents were valid
-	popupYear = e.features[e.features.length - 1].properties.year;
 });
 
  // Change the cursor to a pointer when the mouse is over the points layer.
@@ -396,7 +397,7 @@ map.on('click', 'raising-school-leaders-points', function (e) {
 function fillpopup_rsl(features){
 	let html = "";
 	for (i in features) {
-		let data = features[i].properties;
+		let data = features[i];
 		html = html + "<span class='varname'>Institute: </span> <span class='attribute'>" + data.institute + "</span>";
 		html = html + "<br />"
 		html = html + "<span class='varname'>Campus: </span> <span class='attribute'>" + standardizeCase(data.campus) + "</span>";
@@ -405,8 +406,12 @@ function fillpopup_rsl(features){
 			html = html + "<span class='varname'>School District: </span> <span class='attribute'>" + standardizeCase(data.district) + "</span>";
 			html = html + "<br />"
 			html = html + "<span class='varname'>Year: </span> <span class='attribute'>" + data.year + "</span>";
-			html += "<hr class='divider'/>";
 		}
+		if (data.count > 1) {
+			html = html + "<br />"
+			html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
+		}
+		html += "<hr class='divider'/>";
 	}
 	return html;
 	//this will return the string to the calling function
