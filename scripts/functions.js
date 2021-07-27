@@ -276,7 +276,7 @@ function setFilter(sourceID) {
 				["linear"],
 				['+', ['to-number', ['get', 'year']], (termLength - 1)],
 				2000, 0.2,
-				filterStates.year - 1, 0.2,
+				(filterStates.year - 1), 0.2,
 				filterStates.year, 1
 			]
 		);
