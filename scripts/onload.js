@@ -106,7 +106,7 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'raising-school-leaders',
 			'layerName': 'raising-school-leaders-points',
-			'circleColor': '#005BAD',
+			'circleColor': '#41B6E6',
 			'circleRadius': 4,
 			'legendID': 'raising_school_leaders',
 			'visibleOnLoad': true,
@@ -138,7 +138,7 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'charles-butt-scholars',
 			'layerName': 'charles-butt-scholars-points',
-			'circleColor': '#BE4F1C',
+			'circleColor': '#F15C22',
 			'circleRadius': 4,
 			'legendID': 'charles_butt_scholars',
 			'visibleOnLoad': true
@@ -152,7 +152,7 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'raising-texas-teachers',
 			'layerName': 'raising-texas-teachers-points',
-			'circleColor': '#41B6E6',
+			'circleColor': '#99401b',
 			'circleRadius': 4,
 			'legendID': 'raising_texas_teachers',
 			'visibleOnLoad': true

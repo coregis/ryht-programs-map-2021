@@ -250,23 +250,17 @@ function setFilter(sourceID) {
 		}
 		map.setPaintProperty(
 			sourceID,
-			'circle-opacity',
-			[
-				"interpolate",
-				["exponential", 1.3],
-				['+', ['to-number', ['get', 'year']], (termLength - 1)],
-				2006, 0,
-				filterStates.year, 0.8
-			]
+			'circle-stroke-opacity', 1
 		);
 		map.setPaintProperty(
 			sourceID,
-			'circle-stroke-opacity',
+			'circle-opacity',
 			[
 				"interpolate",
 				["linear"],
 				['+', ['to-number', ['get', 'year']], (termLength - 1)],
-				2006, 0,
+				2000, 0.2,
+				filterStates.year - 1, 0.2,
 				filterStates.year, 1
 			]
 		);
