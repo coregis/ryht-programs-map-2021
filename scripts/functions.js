@@ -51,6 +51,8 @@ if (
 
 if (urlParams["year"]) {
 	filterStates.year = urlParams["year"];
+} else {
+	filterStates.year = 2021;
 }
 if (urlParams["zoomto"]) {
 	filterStates.district.val = urlParams["zoomto"];
