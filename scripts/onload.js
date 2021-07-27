@@ -110,7 +110,7 @@ map.on('load', function () {
 			'circleRadius': 4,
 			'legendID': 'raising_school_leaders',
 			'visibleOnLoad': true,
-			'scalingFactor': 10
+			'scalingFactor': 25
 		}
 	);
 
