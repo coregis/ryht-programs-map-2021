@@ -152,21 +152,15 @@
 			<div id='map'></div>
 
 			<div class='legend'>
-				<div class='legend-title'>Click on a layer name below to toggle its visibility</div>
+				<div class='legend-title'>Click on a program below to toggle its visibility</div>
 				<div class='legend-scale'>
 					<ul class='legend-labels'>
-						<li onClick="showHideLayer('raising-blended-learners-campuses-points', markerNames=['raising_blended_learners_campuses']);"><span id="raising_blended_learners_campuses"></span>Raising Blended Learners Districts</li>
-						<li>
-							<span onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);" id="charles_butt_scholars_icon"></span><span onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);" id="raising_texas_teachers_icon"></span>Raising Texas Teachers:
-							<ul>
-								<li onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);"><span id="charles_butt_scholars"></span>Charles Butt Scholars</li>
-								<li onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);"><span id="raising_texas_teachers"></span>Partner Universities</li>
-							</ul>
-							<br clear="all" />
-						</li>
-						<li onClick="showHideLayer('raising-school-leaders-points', markerNames=['raising_school_leaders']);"><span id="raising_school_leaders"></span>Raising School Leaders</li>
-						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerNames=['state_house_districts']);"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
-						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts']);"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
+						<li onClick="showHideLayer('raising-blended-learners-campuses-points', markerNames=['raising_blended_learners_campuses']);" style="cursor: pointer;"><span id="raising_blended_learners_campuses"></span>Raising Blended Learners Districts</li>
+						<li onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);" style="cursor: pointer;"><span id="charles_butt_scholars"></span>Charles Butt Scholars</li>
+						<li onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);" style="cursor: pointer;"><nobr><span id="raising_texas_teachers"></span>Raising Texas Teachers: University Partners</nobr></li>
+						<li onClick="showHideLayer('raising-school-leaders-points', markerNames=['raising_school_leaders']);" style="cursor: pointer;"><span id="raising_school_leaders"></span>Raising School Leaders Participants</li>
+						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerNames=['state_house_districts']);" style="cursor: pointer !important;"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
+						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts']);" style="cursor: pointer !important;"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
 					</ul>
 				</div> <!-- end of div class='legend-scale' -->
 
