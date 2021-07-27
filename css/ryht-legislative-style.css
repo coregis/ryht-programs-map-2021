@@ -189,7 +189,7 @@ ul{
   }
 
 	.inactive {
-		opacity: 0.25;
+		opacity: 0.2;
 	}
 
 #raising_blended_learners
@@ -286,6 +286,22 @@ ul{
 {
 	background:url(../markers/state_senate_districts.svg) left center;
 	width:11px;
+	height:16px;
+	display: block;
+	float: left;
+}
+#alumni_markers
+{
+	background:url(../markers/alumni.svg) left center;
+	width:14px;
+	height:16px;
+	display: block;
+	float: left;
+}
+#active_markers
+{
+	background:url(../markers/active.svg) left center;
+	width:14px;
 	height:16px;
 	display: block;
 	float: left;
@@ -556,6 +572,7 @@ input#slider {
 
 div#slidercontrols, div#sliderbar {
 	text-align: center;
+	clear: both;
 }
 
 div#slidercontrols span, div#sliderbar input {

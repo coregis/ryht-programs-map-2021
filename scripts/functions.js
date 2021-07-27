@@ -84,6 +84,24 @@ function showHideLayer(layerName, markerNames, showOnly=false, hideOnly=false) {
 	}
 }
 
+
+
+function showHideAlumni(showOnly=false, hideOnly=false) {
+	if ((filterStates.showAlumni || hideOnly) && !showOnly) {
+		filterStates.showAlumni = false;
+		document.getElementById('active_markers').classList.remove('inactive');
+		document.getElementById('alumni_markers').classList.add('inactive');
+	} else {
+		filterStates.showAlumni = true;
+		document.getElementById('alumni_markers').classList.remove('inactive');
+		document.getElementById('active_markers').classList.add('inactive');
+	}
+	for (i in loadedPointLayers) {
+		setFilter(loadedPointLayers[i][0]);
+	}
+}
+
+
 //These are the four functions written by Eldan that power the zoom-to-district feature
 // runWhenLoadComplete() checks if the map has finished loading data, and once it has then it calls the next one.
 //populateZoomControl() fills the dropdowns with options generated from reading the data layers for all the district names.
