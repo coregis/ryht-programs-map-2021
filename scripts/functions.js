@@ -1,7 +1,8 @@
 // store this as a global variable so that the stats box can always access the current value
 var filterStates = {
 	year: false,
-	district: false
+	district: false,
+	showAlumni: true
 };
 // store the year relating to any currently-displayed popup, so it can be cleaned up if necessary
 var popupYear = 0;
@@ -231,25 +232,20 @@ function getUniqueFeatures(array, comparatorProperty) {
 // apply map filters persistently
 function setFilter(sourceID) {
 	if (filterStates.year) {
-		if (filterStates.district && filterStates.district.val) {
-			map.setFilter(
-				sourceID,
-				['all',
-					['<=', 'year', filterStates.year.toString()],
-					['==', filterStates.district.field, filterStates.district.val.toString()]
-				]
-			);
-		} else {
-			map.setFilter(
-				sourceID,
-				['<=', 'year', filterStates.year.toString()]
-			);
-		}
 		if (sourceID.includes("raising-blended-learners")) {
 			termLength = 4;
 		} else {
 			termLength = 1;
 		}
+		filters = ['all']
+		filters.push(['<=', 'year', filterStates.year.toString()]);
+		if (!filterStates.showAlumni) {
+			filters.push(['>', 'year', (filterStates.year - termLength).toString()]);
+		}
+		if (filterStates.district && filterStates.district.val) {
+			filters.push(['==', filterStates.district.field, filterStates.district.val.toString()]);
+		}
+		map.setFilter(sourceID, filters);
 		map.setPaintProperty(
 			sourceID,
 			'circle-stroke-opacity', 1
