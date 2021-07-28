@@ -1,7 +1,8 @@
 // store this as a global variable so that the stats box can always access the current value
 var filterStates = {
 	year: false,
-	district: false
+	district: false,
+	showAlumni: true
 };
 // store the year relating to any currently-displayed popup, so it can be cleaned up if necessary
 var popupYear = 0;
@@ -51,6 +52,8 @@ if (
 
 if (urlParams["year"]) {
 	filterStates.year = urlParams["year"];
+} else {
+	filterStates.year = 2021;
 }
 if (urlParams["zoomto"]) {
 	filterStates.district.val = urlParams["zoomto"];
@@ -80,6 +83,24 @@ function showHideLayer(layerName, markerNames, showOnly=false, hideOnly=false) {
 			}
 	}
 }
+
+
+
+function showHideAlumni(showOnly=false, hideOnly=false) {
+	if ((filterStates.showAlumni || hideOnly) && !showOnly) {
+		filterStates.showAlumni = false;
+		document.getElementById('active_markers').classList.remove('inactive');
+		document.getElementById('alumni_markers').classList.add('inactive');
+	} else {
+		filterStates.showAlumni = true;
+		document.getElementById('alumni_markers').classList.remove('inactive');
+		document.getElementById('active_markers').classList.add('inactive');
+	}
+	for (i in loadedPointLayers) {
+		setFilter(loadedPointLayers[i][0]);
+	}
+}
+
 
 //These are the four functions written by Eldan that power the zoom-to-district feature
 // runWhenLoadComplete() checks if the map has finished loading data, and once it has then it calls the next one.
@@ -229,44 +250,33 @@ function getUniqueFeatures(array, comparatorProperty) {
 // apply map filters persistently
 function setFilter(sourceID) {
 	if (filterStates.year) {
-		if (filterStates.district && filterStates.district.val) {
-			map.setFilter(
-				sourceID,
-				['all',
-					['<=', 'year', filterStates.year.toString()],
-					['==', filterStates.district.field, filterStates.district.val.toString()]
-				]
-			);
-		} else {
-			map.setFilter(
-				sourceID,
-				['<=', 'year', filterStates.year.toString()]
-			);
-		}
 		if (sourceID.includes("raising-blended-learners")) {
 			termLength = 4;
 		} else {
 			termLength = 1;
 		}
+		filters = ['all']
+		filters.push(['<=', 'year', filterStates.year.toString()]);
+		if (!filterStates.showAlumni) {
+			filters.push(['>', 'year', (filterStates.year - termLength).toString()]);
+		}
+		if (filterStates.district && filterStates.district.val) {
+			filters.push(['==', filterStates.district.field, filterStates.district.val.toString()]);
+		}
+		map.setFilter(sourceID, filters);
+		map.setPaintProperty(
+			sourceID,
+			'circle-stroke-opacity', 1
+		);
 		map.setPaintProperty(
 			sourceID,
 			'circle-opacity',
 			[
 				"interpolate",
-				["exponential", 1.3],
-				['+', ['to-number', ['get', 'year']], (termLength - 1)],
-				2006, 0,
-				filterStates.year, 0.8
-			]
-		);
-		map.setPaintProperty(
-			sourceID,
-			'circle-stroke-opacity',
-			[
-				"interpolate",
 				["linear"],
 				['+', ['to-number', ['get', 'year']], (termLength - 1)],
-				2006, 0,
+				2000, 0.2,
+				(filterStates.year - 1), 0.2,
 				filterStates.year, 1
 			]
 		);

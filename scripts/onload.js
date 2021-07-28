@@ -106,11 +106,11 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'raising-school-leaders',
 			'layerName': 'raising-school-leaders-points',
-			'circleColor': '#005BAD',
+			'circleColor': '#41B6E6',
 			'circleRadius': 4,
 			'legendID': 'raising_school_leaders',
 			'visibleOnLoad': true,
-			'scalingFactor': 10
+			'scalingFactor': 25
 		}
 	);
 
@@ -138,7 +138,7 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'charles-butt-scholars',
 			'layerName': 'charles-butt-scholars-points',
-			'circleColor': '#BE4F1C',
+			'circleColor': '#F15C22',
 			'circleRadius': 4,
 			'legendID': 'charles_butt_scholars',
 			'visibleOnLoad': true
@@ -152,7 +152,7 @@ map.on('load', function () {
 			'gusPage': 1,
 			'sourceName': 'raising-texas-teachers',
 			'layerName': 'raising-texas-teachers-points',
-			'circleColor': '#41B6E6',
+			'circleColor': '#99401b',
 			'circleRadius': 4,
 			'legendID': 'raising_texas_teachers',
 			'visibleOnLoad': true
@@ -278,7 +278,11 @@ function fillpopup_rbl(features){
 	for (i in features) {
 		let data = features[i];
 		let endyear = parseInt(data.year) + 3 // 4-year terms for this program
-		html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.school_district + "</span>";
+		if (data.url === undefined) {
+			html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.school_district + "</span>";
+		} else {
+			html = html + "<span class='varname'>District: </span> <span class='attribute'><a href='" + data.url + "'>" + data.school_district + "</a></span>";
+		}
 		html = html + "<br />"
 		html = html + "<span class='varname'>Years: </span> <span class='attribute'>" + data.year + " - " + endyear + "</span>";
 		html = html + "<br />"
@@ -287,6 +291,7 @@ function fillpopup_rbl(features){
 			html = html + "<br />"
 			html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
 		}
+		html += '<br /><span class="attribute"><a href="https://www.raiseyourhandtexas.org/foundation/blended/blended-site-visits/">Request a site visit</a></span>';
 		html += "<hr class='divider'/>";
 	}
 	return html;
