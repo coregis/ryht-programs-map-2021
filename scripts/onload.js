@@ -276,15 +276,15 @@ function fillpopup_rbl(features){
 	for (i in features) {
 		let data = features[i];
 		let endyear = parseInt(data.year) + 3 // 4-year terms for this program
-		if (data.url === undefined) {
-			html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.school_district + "</span>";
+		if (data.url === undefined || data.url === "") {
+			html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.NAME + "</span>";
 		} else {
-			html = html + "<span class='varname'>District: </span> <span class='attribute'><a href='" + data.url + "'>" + data.school_district + "</a></span>";
+			html = html + "<span class='varname'>District: </span> <span class='attribute'><a href='" + data.url + "'>" + data.NAME + "</a></span>";
 		}
 		html = html + "<br />"
 		html = html + "<span class='varname'>Years: </span> <span class='attribute'>" + data.year + " - " + endyear + "</span>";
 		html = html + "<br />"
-		html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grades_served + "</span>";
+		html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grd_served + "</span>";
 		if (data.count > 1) {
 			html = html + "<br />"
 			html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
