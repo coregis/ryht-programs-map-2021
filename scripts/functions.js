@@ -265,7 +265,6 @@ function setFilter(sourceID, polygonLayer) {
 			filters.push(['==', filterStates.district.field, filterStates.district.val.toString()]);
 		}
 		if (polygonLayer) {
-			console.log(filters);
 			if (!filterStates.showAlumni) {
 				map.setPaintProperty(
 					sourceID,
