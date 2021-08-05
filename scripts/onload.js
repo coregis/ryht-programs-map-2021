@@ -253,10 +253,13 @@ if (district.length > 0 && district[0].layer.id === 'school_house_senate_distric
 map.on('click', 'raising-blended-learners-district-outlines', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
 	features = compileUniqueArray(e.features);
-	popup = new mapboxgl.Popup()
-		.setLngLat(e.lngLat)
-		.setHTML(fillpopup_rbl(features) + expandDistrictInfo(district))
-		.addTo(map);
+	let html = fillpopup_rbl(features);
+	if (html !== '') {
+		popup = new mapboxgl.Popup()
+			.setLngLat(e.lngLat)
+			.setHTML(fillpopup_rbl(features) + expandDistrictInfo(district))
+			.addTo(map);
+	}
 });
 
 // Change the cursor to a pointer when the mouse is over the points layer.
@@ -275,22 +278,24 @@ function fillpopup_rbl(features){
 	let html = "";
 	for (i in features) {
 		let data = features[i];
-		let endyear = parseInt(data.year) + 3 // 4-year terms for this program
-		if (data.url === undefined || data.url === "") {
-			html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.NAME + "</span>";
-		} else {
-			html = html + "<span class='varname'>District: </span> <span class='attribute'><a href='" + data.url + "'>" + data.NAME + "</a></span>";
-		}
-		html = html + "<br />"
-		html = html + "<span class='varname'>Years: </span> <span class='attribute'>" + data.year + " - " + endyear + "</span>";
-		html = html + "<br />"
-		html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grd_served + "</span>";
-		if (data.count > 1) {
+		if (data.year <= filterStates.year) {
+			let endyear = parseInt(data.year) + 3 // 4-year terms for this program
+			if (data.url === undefined || data.url === "") {
+				html = html + "<span class='varname'>District: </span> <span class='attribute'>" + data.NAME + "</span>";
+			} else {
+				html = html + "<span class='varname'>District: </span> <span class='attribute'><a href='" + data.url + "'>" + data.NAME + "</a></span>";
+			}
 			html = html + "<br />"
-			html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
+			html = html + "<span class='varname'>Years: </span> <span class='attribute'>" + data.year + " - " + endyear + "</span>";
+			html = html + "<br />"
+			html = html + "<span class='varname'>Grades: </span> <span class='attribute'>" + data.grd_served + "</span>";
+			if (data.count > 1) {
+				html = html + "<br />"
+				html = html + "<span class='varname'>Team of: </span> <span class='attribute'>" + data.count + " people</span>";
+			}
+			html += '<br /><span class="attribute"><a href="https://www.raiseyourhandtexas.org/foundation/blended/blended-site-visits/">Request a site visit</a></span>';
+			html += "<hr class='divider'/>";
 		}
-		html += '<br /><span class="attribute"><a href="https://www.raiseyourhandtexas.org/foundation/blended/blended-site-visits/">Request a site visit</a></span>';
-		html += "<hr class='divider'/>";
 	}
 	return html;
 	//this will return the string to the calling function
