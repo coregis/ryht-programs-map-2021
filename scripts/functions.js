@@ -250,7 +250,12 @@ function getUniqueFeatures(array, comparatorProperty) {
 
 // apply map filters persistently
 function setFilter(sourceID, polygonLayer) {
-	if (filterStates.year) {
+		if (sourceID.includes("raising-blended-learners")) {
+			termLength = 4;
+		} else {
+			termLength = 1;
+		}
+		if (filterStates.year) {
 		filters = ['all']
 		filters.push(['<=', 'year', filterStates.year.toString()]);
 		if (!filterStates.showAlumni) {
@@ -259,7 +264,6 @@ function setFilter(sourceID, polygonLayer) {
 		if (filterStates.district && filterStates.district.val) {
 			filters.push(['==', filterStates.district.field, filterStates.district.val.toString()]);
 		}
-		map.setFilter(sourceID, filters);
 		if (polygonLayer) {
 			map.setPaintProperty(
 				sourceID,
@@ -276,6 +280,7 @@ function setFilter(sourceID, polygonLayer) {
 				]
 			);
 		} else {
+			map.setFilter(sourceID, filters);
 			map.setPaintProperty(
 				sourceID,
 				'circle-stroke-opacity', 1
