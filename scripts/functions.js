@@ -114,21 +114,21 @@ function runWhenLoadComplete() {
 	}
 	else {
 		moveYearSlider('slider', 'active-year', 0); // calling this with a 0 increment will make sure that the filter, caption and slider position all match.  Without doing this, the browser seems to keep the slider position between refreshes, but reset the filter and caption so they get out of sync.
-		map.moveLayer('raising-blended-learners-district-outlines');
-		if (showHouseDistricts) {
-			populateZoomControl("house-districts-control", "state-house-districts", "District", "Texas House Districts");
-			map.moveLayer('state-house-districts-lines');
-		}
-		if (showSenateDistricts) {
-			populateZoomControl("senate-districts-control", "state-senate-districts", "District", "Texas Senate Districts");
-			map.moveLayer('state-senate-districts-lines');
-		}
-		// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
-		setTimeout(function(){
+		map.once('styledata', function() {
+			map.moveLayer('raising-blended-learners-district-outlines');
+			if (showHouseDistricts) {
+				populateZoomControl("house-districts-control", "state-house-districts", "District", "Texas House Districts");
+				map.moveLayer('state-house-districts-lines');
+			}
+			if (showSenateDistricts) {
+				populateZoomControl("senate-districts-control", "state-senate-districts", "District", "Texas Senate Districts");
+				map.moveLayer('state-senate-districts-lines');
+			}
+			// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 			map.moveLayer('raising-school-leaders-points');
 			map.moveLayer('charles-butt-scholars-points');
 			map.moveLayer('raising-texas-teachers-points');
-		}, 100);
+		});
 	}
 }
 
