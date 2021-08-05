@@ -99,6 +99,7 @@ function showHideAlumni(showOnly=false, hideOnly=false) {
 	for (i in loadedPointLayers) {
 		setFilter(loadedPointLayers[i][0]);
 	}
+	setFilter('raising-blended-learners-district-outlines', true);
 }
 
 
@@ -248,13 +249,8 @@ function getUniqueFeatures(array, comparatorProperty) {
 }
 
 // apply map filters persistently
-function setFilter(sourceID) {
+function setFilter(sourceID, polygonLayer) {
 	if (filterStates.year) {
-		if (sourceID.includes("raising-blended-learners")) {
-			termLength = 4;
-		} else {
-			termLength = 1;
-		}
 		filters = ['all']
 		filters.push(['<=', 'year', filterStates.year.toString()]);
 		if (!filterStates.showAlumni) {
@@ -264,23 +260,41 @@ function setFilter(sourceID) {
 			filters.push(['==', filterStates.district.field, filterStates.district.val.toString()]);
 		}
 		map.setFilter(sourceID, filters);
-		map.setPaintProperty(
-			sourceID,
-			'circle-stroke-opacity', 1
-		);
-		map.setPaintProperty(
-			sourceID,
-			'circle-opacity',
-			[
-				"interpolate",
-				["linear"],
-				['+', ['to-number', ['get', 'year']], (termLength - 1)],
-				2000, 0.2,
-				(filterStates.year - 1), 0.2,
-				filterStates.year, 1
-			]
-		);
-	} else {
+		if (polygonLayer) {
+			map.setPaintProperty(
+				sourceID,
+				'fill-opacity',
+				[
+					"interpolate",
+					["linear"],
+					['+', ['to-number', ['get', 'year']], 3],
+					2000, 0.2,
+					(filterStates.year - 1), 0.2,
+					filterStates.year, 1,
+					filterStates.year + 3, 1,
+					filterStates.year + 4, 0
+				]
+			);
+		} else {
+			map.setPaintProperty(
+				sourceID,
+				'circle-stroke-opacity', 1
+			);
+			map.setPaintProperty(
+				sourceID,
+				'circle-opacity',
+				[
+					"interpolate",
+					["linear"],
+					['to-number', ['get', 'year']],
+					2000, 0.2,
+					(filterStates.year - 1), 0.2,
+					filterStates.year, 1,
+					filterStates.year + 1, 0
+				]
+			);
+		}
+		} else {
 		console.log('something`s wrong, there should never be no year filter', filterStates);
 	}
 }
@@ -291,6 +305,7 @@ function updateYearSlider(numberID, year) {
 	for (i in loadedPointLayers) {
 		setFilter(loadedPointLayers[i][0]);
 	}
+	setFilter('raising-blended-learners-district-outlines', true);
 	// update text in the UI
 	document.getElementById(numberID).innerText = year;
 	setTimeout(function(){ updateStatsBox(); }, 100);
