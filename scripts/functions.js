@@ -265,20 +265,38 @@ function setFilter(sourceID, polygonLayer) {
 			filters.push(['==', filterStates.district.field, filterStates.district.val.toString()]);
 		}
 		if (polygonLayer) {
-			map.setPaintProperty(
-				sourceID,
-				'fill-opacity',
-				[
-					"interpolate",
-					["linear"],
-					['+', ['to-number', ['get', 'year']], 3],
-					2000, 0.2,
-					(filterStates.year - 1), 0.2,
-					filterStates.year, 1,
-					filterStates.year + 3, 1,
-					filterStates.year + 4, 0
-				]
-			);
+			console.log(filters);
+			if (!filterStates.showAlumni) {
+				map.setPaintProperty(
+					sourceID,
+					'fill-opacity',
+					[
+						"interpolate",
+						["linear"],
+						['+', ['to-number', ['get', 'year']], 3],
+						2000, 0,
+						(filterStates.year - 1), 0,
+						filterStates.year, 1,
+						filterStates.year + 3, 1,
+						filterStates.year + 4, 0
+					]
+				);
+			} else {
+				map.setPaintProperty(
+					sourceID,
+					'fill-opacity',
+					[
+						"interpolate",
+						["linear"],
+						['+', ['to-number', ['get', 'year']], 3],
+						2000, 0.2,
+						(filterStates.year - 1), 0.2,
+						filterStates.year, 1,
+						filterStates.year + 3, 1,
+						filterStates.year + 4, 0
+					]
+				);
+			}
 		} else {
 			map.setFilter(sourceID, filters);
 			map.setPaintProperty(
@@ -669,7 +687,7 @@ function addVectorLayer(map, params) {
 				},
 			}
 		);
-		if (params.legendID !== undefined) {
+		if (params.legendID !== undefined && params.legendID !== 'raising_blended_learners_campuses') {
 			loadedPolygonLayers.push([params.polygonLayerName, params.legendID]);
 		}
 	}
