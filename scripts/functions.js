@@ -126,7 +126,7 @@ function runWhenLoadComplete() {
 		setTimeout(function(){
 			map.moveLayer('raising-school-leaders-points');
 			map.moveLayer('charles-butt-scholars-points');
-			map.moveLayer('raising-blended-learners-campuses-points');
+			map.moveLayer('raising-blended-learners-district-outlines');
 			map.moveLayer('raising-texas-teachers-points');
 		}, 100);
 	}

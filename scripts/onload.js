@@ -114,22 +114,20 @@ map.on('load', function () {
 		}
 	);
 
-	addPointLayer(
+	addVectorLayer(
 		map,
 		{
-			'gusID': '108YzL2RQ1tqdCmICvoXe7W_GWFtgWhLYem-H3S4-vYA', // Google Sheets ID
-			'gusPage': 1, // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
-			'sourceName': 'raising-blended-learners-campuses', // the data source name, used internally
-			'layerName': 'raising-blended-learners-campuses-points', // layer name, used internally
-			// 'icon': 'raising_blended_learners_campuses_large', // to make this an icon layer, use this property for the icon image name, using the name from Mapbox
-			// 'iconSize': 0.1, // a size multiplier for the icon, which should be saved at 1/x times the intended initial display size, so that when it gets scaled up on zooming in it will still look good
-			'circleColor': '#FDB500', // to get a circle layer, use this property specifying the colour
-			'circleRadius': 4,
-			'legendID': 'raising_blended_learners_campuses', // OPTIONAL: the id in the legend, so we can set it to active or inactive as appropriate. Simply leave out for layers that don't appear in the legend
-			'scalingFactor': 25, // OPTIONAL: how much to magnify the markers by when zooming in.  Defaults to 25 if not specified; set to 1 to have no zoom at all.
-			'visibleOnLoad': true // set the optional final argument to true to have the layer visible on load
+			'sourceName': 'raising-blended-learners-districts',
+			'sourceID': 'rbl_districts_2021_update_tes-dc5kbp',
+			'sourceURL': 'mapbox://core-gis.55g4b92u',
+			'legendID': 'raising_blended_learners_campuses',
+			'displayBehind': 'raising-school-leaders-points',
+			'polygonLayerName': 'raising-blended-learners-district-outlines',
+			'polygonFillColor': '#fDB500',
+			'polygonOutlineColor':'#996E00',
+			'visibleOnLoad': true
 		}
-	);
+	)
 
 	addPointLayer(
 		map,
@@ -252,7 +250,7 @@ if (district.length > 0 && district[0].layer.id === 'school_house_senate_distric
 }
 
 //raising blended learners campuses popup
-map.on('click', 'raising-blended-learners-campuses-points', function (e) {
+map.on('click', 'raising-blended-learners-district-outlines', function (e) {
 	var district = map.queryRenderedFeatures(e.point, {layers: ['school_house_senate_districts_UNION-poly']});
 	features = compileUniqueArray(e.features);
 	popup = new mapboxgl.Popup()
@@ -262,12 +260,12 @@ map.on('click', 'raising-blended-learners-campuses-points', function (e) {
 });
 
 // Change the cursor to a pointer when the mouse is over the points layer.
-map.on('mouseenter', 'raising-blended-learners-campuses-points', function () {
+map.on('mouseenter', 'raising-blended-learners-district-outlines', function () {
 	map.getCanvas().style.cursor = 'pointer';
 });
 
 // Change it back to a pointer when it leaves.
-map.on('mouseleave', 'raising-blended-learners-campuses-points', function () {
+map.on('mouseleave', 'raising-blended-learners-district-outlines', function () {
 	map.getCanvas().style.cursor = '';
 });
 
