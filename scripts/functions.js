@@ -128,6 +128,7 @@ function runWhenLoadComplete() {
 			map.moveLayer('charles-butt-scholars-points');
 			map.moveLayer('raising-blended-learners-campuses-points');
 			map.moveLayer('raising-texas-teachers-points');
+			updateStatsBox();
 		}, 100);
 	}
 }
@@ -386,7 +387,6 @@ window.addEventListener('popstate', function() {
 
 function zoomToPolygon(sourceID, coords, filterField) {
 	if (typeof coords !== 'undefined') {
-		document.getElementById('statsBox').style.opacity = 0;
 		coords = coords.split(",");
 		bbox = [
 			[coords[0], coords[1]],
@@ -453,44 +453,40 @@ function zoomToPolygon(sourceID, coords, filterField) {
 						showHideLayer(loadedPointLayers[i][0], [loadedPointLayers[i][1], loadedPointLayers[i][1] + '_icon'], showOnly=true);
 					}
 				}
-				if (coords[4] === '0') {
-					document.getElementById('statsBox').style.opacity = 0;
-				}
 			}, 1500);
 		}
 	}
 }
 
 function updateStatsBox() {
-	if (filterStates.district && filterStates.district.val) { // only do anything if we have a selected district
-		document.getElementById('statsBox').style.opacity = 1;
+	document.getElementById('statsBox').style.opacity = 1;
+	if (filterStates.district.field !== undefined && filterStates.district.val !== undefined) {
 		if (filterStates.district.field.indexOf("house") > -1) {
-			document.getElementById("stats.districtType").innerText = "House";
+			document.getElementById("stats.districtType").innerText = "House District";
 		} else if (filterStates.district.field.indexOf("senate") > -1) {
-			document.getElementById("stats.districtType").innerText = "Senate";
-		} else {
-			document.getElementById("stats.districtType").innerText = "";
+			document.getElementById("stats.districtType").innerText = "Senate District";
 		}
-		document.getElementById("stats.districtName").innerText = filterStates.district.val;
-		document.getElementById("stats.year").innerText = filterStates.year;
-		for (i in loadedPointLayers) {
-			if (loadedPointLayers[i][0].includes("raising-blended-learners")) {
-				f = ['<', 'year', (filterStates.year + 4).toString()];
-			} else {
-				f = ['==', 'year', filterStates.year.toString()];
-			}
-			pointsInDistrict = getUniqueFeatures(
-				map.queryRenderedFeatures( {
-					layers: [loadedPointLayers[i][0]],
-					filter: f
-				} ),
-				"unique_id"
-			);
-			counterID = "count." + loadedPointLayers[i][0];
-			document.getElementById(counterID).innerText = pointsInDistrict.length;
-		}
+		document.getElementById("stats.districtName").innerHTML = filterStates.district.val + '<br />';
 	} else {
-		document.getElementById('statsBox').style.opacity = 0;
+		document.getElementById("stats.districtType").innerText = "Texas";
+		document.getElementById("stats.districtName").innerText = '';
+	}
+	document.getElementById("stats.year").innerText = filterStates.year;
+	for (i in loadedPointLayers) {
+		if (loadedPointLayers[i][0].includes("raising-blended-learners")) {
+			f = ['<', 'year', (filterStates.year + 4).toString()];
+		} else {
+			f = ['==', 'year', filterStates.year.toString()];
+		}
+		pointsInDistrict = getUniqueFeatures(
+			map.queryRenderedFeatures( {
+				layers: [loadedPointLayers[i][0]],
+				filter: f
+			} ),
+			"unique_id"
+		);
+		counterID = "count." + loadedPointLayers[i][0];
+		document.getElementById(counterID).innerText = pointsInDistrict.length;
 	}
 }
 
