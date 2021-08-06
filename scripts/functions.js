@@ -251,12 +251,12 @@ function getUniqueFeatures(array, comparatorProperty) {
 
 // apply map filters persistently
 function setFilter(sourceID, polygonLayer) {
-		if (sourceID.includes("raising-blended-learners")) {
-			termLength = 4;
-		} else {
-			termLength = 1;
-		}
-		if (filterStates.year) {
+	if (sourceID.includes("raising-blended-learners")) {
+		termLength = 4;
+	} else {
+		termLength = 1;
+	}
+	if (filterStates.year) {
 		filters = ['all']
 		filters.push(['<=', 'year', filterStates.year.toString()]);
 		if (!filterStates.showAlumni) {
@@ -317,8 +317,8 @@ function setFilter(sourceID, polygonLayer) {
 				]
 			);
 		}
-		} else {
-		console.log('something`s wrong, there should never be no year filter', filterStates);
+	} else {
+	console.log('something`s wrong, there should never be no year filter', filterStates);
 	}
 }
 
