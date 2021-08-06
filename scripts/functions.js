@@ -120,12 +120,13 @@ function runWhenLoadComplete() {
 			if (showHouseDistricts) {
 				populateZoomControl("house-districts-control", "state-house-districts", "District", "Texas House Districts");
 				map.moveLayer('state-house-districts-lines');
+				map.moveLayer('raising-blended-learners-district-outlines', 'state-house-districts-poly');
 			}
 			if (showSenateDistricts) {
 				populateZoomControl("senate-districts-control", "state-senate-districts", "District", "Texas Senate Districts");
 				map.moveLayer('state-senate-districts-lines');
+				map.moveLayer('raising-blended-learners-district-outlines', 'state-senate-districts-poly');
 			}
-			// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 			map.moveLayer('raising-school-leaders-points');
 			map.moveLayer('charles-butt-scholars-points');
 			map.moveLayer('raising-texas-teachers-points');

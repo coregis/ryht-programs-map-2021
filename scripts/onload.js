@@ -114,6 +114,7 @@ map.on('load', function () {
 		}
 	);
 
+	// districts to display
 	addVectorLayer(
 		map,
 		{
@@ -127,7 +128,21 @@ map.on('load', function () {
 			'polygonOutlineColor':'#996E00',
 			'visibleOnLoad': true
 		}
-	)
+	);
+
+	// points to never show, just filter and count for the stats box
+	addPointLayer(
+		map,
+		{
+			'gusID': '108YzL2RQ1tqdCmICvoXe7W_GWFtgWhLYem-H3S4-vYA', // Google Sheets ID
+			'gusPage': 1, // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
+			'sourceName': 'raising-blended-learners-campuses', // the data source name, used internally
+			'layerName': 'raising-blended-learners-campuses-points', // layer name, used internally
+			'circleColor': 'rgba(0,0,0,0)', // to get a circle layer, use this property specifying the colour
+			'circleRadius': 0,
+			'visibleOnLoad': true // set the optional final argument to true to have the layer visible on load
+		}
+	);
 
 	addPointLayer(
 		map,
