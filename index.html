@@ -16,7 +16,7 @@
 
 	<head>
 		<meta charset='utf-8' />
-		<title>Raise Your Hand Texas programs</title>
+		<title>Raise Your Hand Texas Programs</title>
 		<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
 		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
@@ -37,18 +37,81 @@
 
 	<body>
 
-	<!--BEGIN FLYOUT FOR 'ZOOM TO LAYERS'-->
+<!-- div for the  landing page with instructions-->	
 
-		<div id="mySidenav" class="sidenav">
-			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+<!--
+	<div id='landing' onClick='this.style.opacity = 0; this.style.visibility = "hidden";'>
+		<div id='landing_content'>
 			<p>
-				<br /><br /><br />
+				The Raise Your Hand Texas Programs Map is a data visualization platform developed by <a href="https://www.coregis.net" target="_blank">CoreGIS</a>
 			</p>
-			<p class="moreinfo">
-				Use the drop-down menus below to zoom to a <span id="house-district-reference">House</span><span id="senate-district-reference">Senate</span> District of your choice.
-				<br /><br />
+			<p>	
+				Get Started With the Raise Your Hand Texas Programs Map:<br />
+				<b>Map:</b> Visualize the growth of Raise Your Hand Texas Programs (Raising Blended Learners, Raising School Leaders, and Raising Texas Teachers: University Partners and Charles Butt Scholars) from 2008 to the present. <br />
+				<b>Interaction:</b> In the sidebar on the left hand side, click the Play, Stop, Skip Forward, or Skip Backward buttons to explore the reach of our programs across the state of Texas. You can toggle viewing or hiding each Program, and view by House or Senate District.  Finally, you can click on each dot to learn more about a particular program, partnership, or recipient. 
+			</p>
+			<br />
+			<span class='button'>Explore the surveys &nbsp;➔</span>
+		</div>
+	</div>	
+-->
+	
+<!-- div for the legend and date controls -->	
+		<div id='console'>
+			<h1>Raise Your Hand Texas Programs Map</h1>	
 
-				<!--Drop down controls-->
+			<!--BEGIN 'INSTRUCTIONS'-->
+
+				<p class="instructionstitle">Map Instructions
+				<p class="instructionstext">Use the play, forward, and backward buttons below to animate the map through time. Solid colors indicate programs or recipients active during that year, and transparent colors indicate previously active programs or recipients. Click any point on the map to learn more about a program. You can toggle viewing or hiding each Program, and view by House or Senate District.  Finally, you can click on each dot to learn more about a particular program, partnership, or recipient.</p>
+
+			<!--END 'INSTRUCTIONS'-->
+			
+			<!--BEGIN LEGEND AND TIME SLIDER-->
+			
+						<div class='legend'>
+				<div class='legend-title'>Click on a program below to toggle its visibility</div>
+				<div class='legend-scale'>
+					<ul class='legend-labels'>
+						<li onClick="showHideLayer('raising-blended-learners-district-outlines', markerNames=['raising_blended_learners_campuses']);" style="cursor: pointer;"><span id="raising_blended_learners_campuses"></span>Raising Blended Learners Districts</li>
+						<li onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);" style="cursor: pointer;"><span id="charles_butt_scholars"></span>Charles Butt Scholars</li>
+						<li onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);" style="cursor: pointer;"><nobr><span id="raising_texas_teachers"></span>Raising Texas Teachers: University Partners</nobr></li>
+						<li onClick="showHideLayer('raising-school-leaders-points', markerNames=['raising_school_leaders']);" style="cursor: pointer;"><span id="raising_school_leaders"></span>Raising School Leaders Participants</li>
+						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerNames=['state_house_districts']);" style="cursor: pointer !important;"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
+						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts']);" style="cursor: pointer !important;"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
+						<li onClick="showHideAlumni(showOnly=true);" style="cursor: pointer;"><span id="alumni_markers"></span>Alumni & active in current year</li>
+						<li onClick="showHideAlumni(showOnly=false, hideOnly=true);" style="cursor: pointer;"><span id="active_markers" class="inactive"></span>Active in current year only</li>
+					</ul>
+				</div> <!-- end of div class='legend-scale' -->
+
+			<!--create time slider-->
+				<div class='session' id='sliderbar'>
+					Year: <label id='active-year'></label><br />
+					<input id='slider' class='row' type='range' min='2008' max='2021' step='1' value='2008' onmouseup="moveYearSlider('slider', 'active-year', 0);" />
+				</div>
+				<div id='slidercontrols'>
+					<span id='slider_back' onclick="moveYearSlider('slider', 'active-year', -1);" title='Go back one year'><img src="images/skip_backward.svg"></span>
+					<span id='slider_play' onclick="startYearAnimation('slider', 'active-year', 1000, 'slider_play', 'slider_stop');" title='Animate timeline'><img src="images/play.svg"></span>
+					<span id='slider_stop' onclick="stopYearAnimation('slider_play', 'slider_stop');" title='Stop animation'><img src="images/stop.svg"></span>
+					<span id='slider_forward' onclick="moveYearSlider('slider', 'active-year', 1);" title='Go forward one year'><img src="images/skip_forward.svg"></span>
+				</div> <!-- id='slidercontrols' -->
+
+				<div class='legend-source'>Source: <a href="https://www.raiseyourhandtexas.org/" target="_blank">Raise Your Hand Texas</a></div>
+				<div class='map-credit'>Map design by <a href="http://www.coregis.net/" target="_blank">CORE GIS</a></div>
+			</div> <!-- end of div id="legend" -->
+
+			<!-- JS that needs the above elements to be declared before it runs -->
+			<script src='scripts/onload.js'></script>
+	
+		</div> <!-- end of div id="console" -->
+<!--END LEGEND AND TIME SLIDER-->
+		
+<!--BEGIN ZOOM CONTROLS-->
+		<div id="mySidenav" class="sidenav">
+			<p class="moreinfo">
+				Use the drop-down menu below to zoom to a House or Senate district of your choice. Choose the top entry to return to the full extent of the state.
+			
+			<!--House and Senate drop down controls-->
 
 				<select id="house-districts-control" onchange="zoomToPolygon('state-house-districts', this.value, 'house_dist');"></select>
 				<select id="senate-districts-control" onchange="zoomToPolygon('state-senate-districts', this.value, 'senate_dist');"></select>
@@ -79,31 +142,6 @@
 				</p>
 			</p>
 
-			<!--Program logos and descriptions-->
-
-			<br />
-
-			<a href="https://www.raiseyourhandtexas.org/foundation/blended/" class="programlink" target="_blank"><img src="images/rbl.svg" /></a>
-			<button class="collapsible">Read more...</button>
-			<div class="content">
-			<br>
-				<p class="programs">
-					<a href="https://www.raiseyourhandtexas.org/foundation/blended/" class="programlink" target="_blank">Raising Blended Learners</a>  is a pilot instructional program that uses both online and brick-and-mortar strategies to create and scale a more student-centered approach to instruction in Texas. Five demonstration sites will receive up to $500,000 to implement programs. In addition, 15 districts selected as pilot networks have received implementation support.
-				</p>
-			</div>
-			<br>
-			<a href="https://www.raiseyourhandtexas.org/foundation/raising-texas-teachers/" class="programlink" target="_blank"><img src="images/rtt.svg" /></a>
-			<button class="collapsible">Read more...</button>
-			<div class="content">
-			 <p class="programs"><a href="https://www.raiseyourhandtexas.org/foundation/raising-texas-teachers/" class="programlink" target="_blank">Raising Texas Teachers</a> is a $50 million investment over the next 10 years toward elevating the teaching profession in Texas. The program will provide $8,000 per student per year in scholarship funding for students committed to a career in teaching, in addition to technical support at 10 premier teacher preparation programs across the state. Over time, the scholarship program will grow to include 500 fellows annually.</p>
-			</div>
-			<br>
-			<a href="https://www.raiseyourhandtexas.org/foundation/raising-school-leaders/" class="programlink" target="_blank"><img src="images/rsl.svg"  /></a>
-			<button class="collapsible">Read more...</button>
-			<div class="content">
-				<p class="programs">Through <a href="https://www.raiseyourhandtexas.org/foundation/raising-school-leaders/" class="programlink" target="_blank">Raising School Leaders</a>, Raise Your Hand Texas and the Raise Your Hand Texas Foundation have sent more than 1,000 school principals, school district teams, and other public education stakeholders to leadership development and coaching programs at Harvard University and other colleges and education organizations across the country. To date, our total investment in the program has exceeded +$15 million.</p>
-			</div>
-
 			<br>
 
 			<p class="moreinfo">Map produced by <a href="http://www.coregis.net/" target="_blank">CoreGIS</a>.
@@ -115,10 +153,6 @@
 		</div> <!-- end of div id="mySidenav" class="sidenav" -->
 
 		<div id="main">
-
-			<div id="about">
-				<span style="font-size:16px;cursor:pointer" onclick="openNav()">&#9776; Zoom to Legislative Districts</span>
-			</div>
 
 		<!--END FLYOUT FOR 'ZOOM TO LAYERS'-->
 
@@ -147,44 +181,8 @@
 
 		<!--END SUMMARY STATS APPEAR/DISAPPER WINDOW-->
 
-
-
-			<div id='map'></div>
-
-			<div class='legend'>
-				<div class='legend-title'>Click on a program below to toggle its visibility</div>
-				<div class='legend-scale'>
-					<ul class='legend-labels'>
-						<li onClick="showHideLayer('raising-blended-learners-district-outlines', markerNames=['raising_blended_learners_campuses']);" style="cursor: pointer;"><span id="raising_blended_learners_campuses"></span>Raising Blended Learners Districts</li>
-						<li onClick="showHideLayer('charles-butt-scholars-points', markerNames=['charles_butt_scholars', 'charles_butt_scholars_icon']);" style="cursor: pointer;"><span id="charles_butt_scholars"></span>Charles Butt Scholars</li>
-						<li onClick="showHideLayer('raising-texas-teachers-points', markerNames=['raising_texas_teachers', 'raising_texas_teachers_icon']);" style="cursor: pointer;"><nobr><span id="raising_texas_teachers"></span>Raising Texas Teachers: University Partners</nobr></li>
-						<li onClick="showHideLayer('raising-school-leaders-points', markerNames=['raising_school_leaders']);" style="cursor: pointer;"><span id="raising_school_leaders"></span>Raising School Leaders Participants</li>
-						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerNames=['state_house_districts']);" style="cursor: pointer !important;"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
-						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts']);" style="cursor: pointer !important;"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
-						<li onClick="showHideAlumni(showOnly=true);" style="cursor: pointer;"><span id="alumni_markers"></span>Alumni & active in current year</li>
-						<li onClick="showHideAlumni(showOnly=false, hideOnly=true);" style="cursor: pointer;"><span id="active_markers" class="inactive"></span>Active in current year only</li>
-					</ul>
-				</div> <!-- end of div class='legend-scale' -->
-
-<!--create time slider-->
-				<div class='session' id='sliderbar'>
-					Year: <label id='active-year'></label><br />
-					<input id='slider' class='row' type='range' min='2008' max='2021' step='1' value='2008' onmouseup="moveYearSlider('slider', 'active-year', 0);" />
-				</div>
-				<div id='slidercontrols'>
-					<span id='slider_back' onclick="moveYearSlider('slider', 'active-year', -1);" title='Go back one year'><img src="images/skip_backward.svg"></span>
-					<span id='slider_play' onclick="startYearAnimation('slider', 'active-year', 1000, 'slider_play', 'slider_stop');" title='Animate timeline'><img src="images/play.svg"></span>
-					<span id='slider_stop' onclick="stopYearAnimation('slider_play', 'slider_stop');" title='Stop animation'><img src="images/stop.svg"></span>
-					<span id='slider_forward' onclick="moveYearSlider('slider', 'active-year', 1);" title='Go forward one year'><img src="images/skip_forward.svg"></span>
-				</div> <!-- id='slidercontrols' -->
-
-				<div class='legend-source'>Source: <a href="https://www.raiseyourhandtexas.org/" target="_blank">Raise Your Hand Texas</a></div>
-				<div class='map-credit'>Map design by <a href="http://www.coregis.net/" target="_blank">CORE GIS</a></div>
-			</div> <!-- end of div id="legend" -->
-		</div> <!-- end of div id="main" -->
-
-<!-- JS that needs the above elements to be declared before it runs -->
-		<script src='scripts/onload.js'></script>
+<!-- Mapbox will draw the map into this div -->
+		<div id='map'></div>
 
 	</body>
 </html>

@@ -559,7 +559,51 @@ function standardizeCase(txt) {
 	}
 }
 
-
+// dynamically size the 3 core elements of the page relative to each other
+function allocateScreenSpace() {
+	var viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+	// adjust text size + spacing for sidenav
+	var sidenav = document.getElementById('mySidenav');
+	sidenav.style.height = viewportHeight - document.getElementById('console').offsetHeight;
+	if (viewportHeight > 840) {
+		sidenav.classList.add('tallpage');
+		sidenav.classList.remove('shortpage');
+	}
+	else if (viewportHeight < 700) {
+		sidenav.classList.remove('tallpage');
+		sidenav.classList.add('shortpage');
+	} else {
+		sidenav.classList.remove('tallpage');
+		sidenav.classList.remove('shortpage');
+	}
+	var sidenavWidth = Math.max(sidenav.clientWidth, sidenav.innerWidth || 0);
+	var activeControlDiv = document.getElementById(
+		(chartData.visible ? 'chart-controls' : 'chart-open-link')
+	);
+	var hiddenControlDiv = document.getElementById(
+		(chartData.visible ? 'chart-open-link' : 'chart-controls' )
+	);
+	activeControlDiv.style.display = 'block';
+	hiddenControlDiv.style.display = 'none';
+	var activeControlStyle = (activeControlDiv.currentStyle || window.getComputedStyle(activeControlDiv));
+	var activeControlPadding = [
+		parseInt(activeControlStyle.paddingLeft, 10) + parseInt(activeControlStyle.paddingRight, 10),
+		parseInt(activeControlStyle.paddingTop, 10) + parseInt(activeControlStyle.paddingBottom, 10)
+	];
+	var controlsHeight = activeControlDiv.offsetHeight;
+	var svgWidth = viewportWidth - sidenavWidth;
+	var svgHeight = (chartData.visible ? Math.max((viewportHeight / 4), 250) - activeControlPadding[1] : 0);
+	var svg = document.getElementById(chartData.svgID);
+	svg.style.width = svgWidth;
+	svg.style.height = svgHeight;
+	svg.style.bottom = controlsHeight;
+	activeControlDiv.style.width = svgWidth - activeControlPadding[0];
+	var mapDiv = document.getElementById("map");
+	mapDiv.style.height = viewportHeight - svgHeight - controlsHeight;
+	mapDiv.style.width = viewportWidth - sidenavWidth;
+	return [svgWidth, svgHeight];
+}
 
 
 function openNav() {
