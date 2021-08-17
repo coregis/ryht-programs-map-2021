@@ -90,7 +90,7 @@ img {
 	padding: 10px;
 	z-index: 1;
 	width: 240px;
-	margin: 10px
+	margin: 10px auto;
 }
 
 .stats {
