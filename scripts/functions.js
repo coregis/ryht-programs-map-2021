@@ -552,7 +552,7 @@ function setVisibilityState(params) {
 }
 
 function addPointLayer(map, params) {
-	gus_api(params.csvURL, function(jsondata) {
+	parseTSV(params.tsvURL, function(jsondata) {
 		var visibilityState = setVisibilityState(params);
 		if (params.scalingFactor === undefined) { params.scalingFactor = 25; }
 		map.addSource(params.sourceName, {
@@ -680,8 +680,8 @@ function fetchFile(path, callback) {
 	httpRequest.onreadystatechange = function() {
 		if (httpRequest.readyState === 4) {
 			if (httpRequest.status === 200) {
-				var data = JSON.parse(httpRequest.responseText);
-				if (callback) callback(data);
+				// splitting on CRLFs gives us an array in which each item was one row of the original CSV
+				if (callback) callback(httpRequest.responseText.split('\r\n'));
 			}
 		}
 	};
@@ -730,11 +730,12 @@ function compileUniqueArray(features, ignoreFields=[]) {
 
 
 
-function gus_api(url, callback) {
+function parseTSV(url, callback) {
 	fetchFile(url, function(data) {
 
-		let headers = {};
+		let headers = data[0].split('\t');
 		let entries = {};
+		console.log(headers);
 
 		data.feed.entry.forEach((e) => {
 			// get the row number
