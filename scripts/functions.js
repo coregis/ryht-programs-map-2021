@@ -552,7 +552,7 @@ function setVisibilityState(params) {
 }
 
 function addPointLayer(map, params) {
-	gus_api(params.gusID, params.gusPage, function(jsondata) {
+	gus_api(params.csvURL, function(jsondata) {
 		var visibilityState = setVisibilityState(params);
 		if (params.scalingFactor === undefined) { params.scalingFactor = 25; }
 		map.addSource(params.sourceName, {
@@ -675,7 +675,7 @@ function fillpopup(data) {
 
 
 
-function fetchJSONFile(path, callback) {
+function fetchFile(path, callback) {
 	var httpRequest = new XMLHttpRequest();
 	httpRequest.onreadystatechange = function() {
 		if (httpRequest.readyState === 4) {
@@ -730,10 +730,8 @@ function compileUniqueArray(features, ignoreFields=[]) {
 
 
 
-function gus_api(id, page='od6', callback) {
-	const url = `https://spreadsheets.google.com/feeds/cells/${id}/${page}/public/basic?alt=json`;
-
-	fetchJSONFile(url, function(data) {
+function gus_api(url, callback) {
+	fetchFile(url, function(data) {
 
 		let headers = {};
 		let entries = {};
