@@ -730,10 +730,34 @@ function compileUniqueArray(features, ignoreFields=[]) {
 
 
 
+function normaliseHeaders(row) {
+	let headers = row.split('\t');
+	for (let i in headers) {
+		switch(headers[i].toLowerCase()) {
+				case 'longitude':
+				case 'long':
+				case 'lng':
+				case 'lon':
+				case 'x':
+				case 'xcoord':
+				headers[i] = 'x';
+				break;
+				case 'latitude':
+				case 'lat':
+				case 'y':
+				case 'ycoord':
+				headers[i] = 'y';
+		}
+	}
+	return headers;
+}
+
+
+
 function parseTSV(url, callback) {
 	fetchFile(url, function(data) {
 
-		let headers = data[0].split('\t');
+		let headers = normaliseHeaders(data[0]);
 		let entries = {};
 		console.log(headers);
 
