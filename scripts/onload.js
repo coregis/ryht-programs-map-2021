@@ -102,8 +102,7 @@ map.on('load', function () {
 	addPointLayer(
 		map,
 		{
-			'gusID': "1CuutbSlRIgD1FsCUgQE0GyuPckgh6_zLhX-CfzQBymU",
-			'gusPage': 1,
+			'tsvURL': "https://docs.google.com/spreadsheets/d/e/2PACX-1vThQIAx3AYYtRLgKzCfodIThk1_YqZmFCVSCLATbozYnbVi_hTaoIU3eDDxP6L9-3ofkELApw4L_2sk/pub?gid=1352187007&single=true&output=tsv",
 			'sourceName': 'raising-school-leaders',
 			'layerName': 'raising-school-leaders-points',
 			'circleColor': '#41B6E6',
@@ -117,8 +116,7 @@ map.on('load', function () {
 	addPointLayer(
 		map,
 		{
-			'gusID': '108YzL2RQ1tqdCmICvoXe7W_GWFtgWhLYem-H3S4-vYA', // Google Sheets ID
-			'gusPage': 1, // for newer Google Sheets (2021), this is the 1-indexed tab number that we want.  For older ones, it's the magic string 'od6'
+			'tsvURL': 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQkbvKo3iSdUOOnV55xZWSjonEFPD7ZtXZb1BopnVxuwPgzvYVIj22MvqZSX8crWhL3y5EtEmPNU5K/pub?gid=0&single=true&output=tsv', // Whole link for the CSV output from Google Sheets
 			'sourceName': 'raising-blended-learners-campuses', // the data source name, used internally
 			'layerName': 'raising-blended-learners-campuses-points', // layer name, used internally
 			// 'icon': 'raising_blended_learners_campuses_large', // to make this an icon layer, use this property for the icon image name, using the name from Mapbox
@@ -134,8 +132,7 @@ map.on('load', function () {
 	addPointLayer(
 		map,
 		{
-			'gusID': "1eLkfBuimyujyjnGN7GlTrA_XcRhpCb-cFaxGV9OYaBc",
-			'gusPage': 1,
+			'tsvURL': "https://docs.google.com/spreadsheets/d/e/2PACX-1vSbbKunE8ofTAowmbXsNosyx4Hi7aHdSGwrWV5YQmcuxuhOHnBfYmir5VVA5C8VqFCDMjqAw3I9e5Im/pub?gid=697505768&single=true&output=tsv",
 			'sourceName': 'charles-butt-scholars',
 			'layerName': 'charles-butt-scholars-points',
 			'circleColor': '#F15C22',
@@ -148,8 +145,7 @@ map.on('load', function () {
 	addPointLayer(
 		map,
 		{
-			'gusID': "13FHPkunuw6GJpbE9nh6zJIHPjruwwEdWP66Md33XxnQ",
-			'gusPage': 1,
+			'tsvURL': "https://docs.google.com/spreadsheets/d/e/2PACX-1vQchMpQoBdYmzqkNASTNdXIf6cmDbYm3K_rdcNGrp1-KCcT9N97h5CjhvhCrgj6gky6uSQra-4FZtuV/pub?gid=956631515&single=true&output=tsv",
 			'sourceName': 'raising-texas-teachers',
 			'layerName': 'raising-texas-teachers-points',
 			'circleColor': '#99401b',
