@@ -759,51 +759,29 @@ function parseTSV(url, callback) {
 
 		let headers = normaliseHeaders(data[0]);
 		let entries = {};
-		console.log(headers);
-
-		data.feed.entry.forEach((e) => {
-			// get the row number
-			const row = parseInt(e.title['$t'].match(/\d+/g)[0]);
-			const column = e.title['$t'].match(/[a-zA-Z]+/g)[0];
-			const content = e.content['$t'];
-
-			// it's a header
-			if (row === 1) {
-				headers[column] = content;
-			} else {
-				if (!entries[row]) entries[row] = {};
-				entries[row][headers[column]] = content;
-			}
-		});
 
 		const gj = { type: 'FeatureCollection', features: [] };
-		for (let e in entries) {
 
+		for (let i = 1; i < data.length; i++) {
+			let row = data[i].split('\t');
 			const feature = {
 				type: 'Feature',
 				geometry: {
 					type: 'Point',
 					coordinates: [0, 0]
 				},
-				properties: entries[e]
+				properties: {}
 			};
 
-			for (let p in entries[e]) {
-				switch(p.toLowerCase()) {
-					case 'longitude':
-					case 'long':
-					case 'lng':
-					case 'lon':
-					case 'x':
-					case 'xcoord':
-						feature.geometry.coordinates[0] = parseFloat(entries[e][p]);
-						break;
-					case 'latitude':
-					case 'lat':
-					case 'y':
-					case 'ycoord':
-						feature.geometry.coordinates[1] = parseFloat(entries[e][p]);
-				}
+			for (let j = 0; j < headers.length; j++) {
+				feature.properties[headers[j]] = row[j];
+			}
+
+			if ('x' in feature.properties) {
+				feature.geometry.coordinates[0] = parseFloat(feature.properties.x);
+			}
+			if ('y' in feature.properties) {
+				feature.geometry.coordinates[1] = parseFloat(feature.properties.y);
 			}
 
 			gj.features.push(feature);
