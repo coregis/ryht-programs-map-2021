@@ -109,7 +109,7 @@ function showHideAlumni(showOnly=false, hideOnly=false) {
 //zoomToPolygon() zooms the map to the district extent
 
 function runWhenLoadComplete() {
-	if (!map.getLayer('raising-school-leaders-points')) {
+	if (!map.getLayer('raising-school-leaders-points') || !map.getLayer('charles-butt-scholars-points') || !map.getLayer('raising-blended-learners-campuses-points') || !map.getLayer('raising-texas-teachers-points')) {
 		setTimeout(runWhenLoadComplete, 100);
 	}
 	else {
