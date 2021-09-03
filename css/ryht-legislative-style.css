@@ -2,14 +2,15 @@
 body {
 	padding:0;
 	margin:0;
+	font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+    overflow: hidden;
 }
 
-div#map {
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
-	position: absolute;
+#map {
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  width: 80%;
 }
 
 /*This formatting is for the  name of the fields in the pop-up*/
@@ -77,8 +78,6 @@ img {
 
 .legend, .stats {
 	background-color: rgba(255, 255, 255, 0.7);
-	border: 1px solid rgba(190, 188, 188, 1);
-	color: rgba(82, 82, 80, 1);
 	font-weight: normal;
 	text-decoration: none;
 	overflow: hidden; /*planning ahead to clear floats*/
@@ -345,7 +344,20 @@ a:active {
     text-decoration: underline;
 }
 
-/* Use this to style the 'Zoom to Districts' pop-out */
+/* This code makes the sidenav 'always on' */
+.sidenav {
+  height: 100%;
+  width: 260px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #ffff;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Use this code to make  the 'Zoom to Districts' pop-out  collapse
 .sidenav {
     height: 100%;
     width: 0;
@@ -357,7 +369,7 @@ a:active {
     overflow-x: hidden;
     transition: 0.5s;
     /*padding-top: 60px;*/
-}
+}*/
 
 /*.sidenav p {
     padding: 8px 8px 8px 32px;
@@ -384,7 +396,7 @@ border: none;
 }
 
 p.moreinfo  {
-  padding: 8px 8px 8px 32px;
+  padding: 8px 48px 8px 32px;
   background: #ffff;
   color:#4a4a4a;
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
@@ -434,7 +446,7 @@ p.programs  {
 }
 
 .sidenav img {
-	width: 240px;
+	width: 260px;
 	padding: 0px 30px;
 }
 
@@ -485,11 +497,6 @@ p.programs  {
     margin-left: 50px;
 }
 
-#main {
-    transition: margin-left .5s;
-    padding: 0px;
-}
-
 #about {
 	/*transition: margin-left .5s;
     padding: 16px;*/
@@ -498,7 +505,7 @@ p.programs  {
 	color: #ffff;
 	filter: alpha(opacity = 0);
     position:fixed;
-	padding:5px 5px 5px 5px;
+	padding:5px 10px 5px 10px;
 	left:20px;
 	top:20px;
     display:block;
@@ -567,10 +574,18 @@ input#slider {
 	width: 85%;
 }
 
-div#slidercontrols, div#sliderbar {
+div#sliderbar {
 	text-align: center;
 	clear: both;
+	padding-top: 24px;
 }
+
+div#slidercontrols{
+	text-align: center;
+	clear: both;
+	padding-bottom: 24px;
+}
+
 
 div#slidercontrols img {
 	width: 2em;
