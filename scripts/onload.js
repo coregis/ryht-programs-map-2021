@@ -8,7 +8,7 @@ var bounds = [
 var map = new mapboxgl.Map({
 	container: 'map', // container id
 	style: 'mapbox://styles/core-gis/ckq137o0x11su18qzogi3e52t', // stylesheet location; this is the v2.3.1 style with markers turned OFF
-	center: [-98.887939, 31.821565], // starting position [lng, lat]
+	center: [-99.228516, 31.203405], // starting position [lng, lat]
 	zoom: 5.5, // starting zoom
 	maxBounds: bounds // sets bounds as max
 });
