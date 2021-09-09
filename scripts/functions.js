@@ -122,6 +122,8 @@ function runWhenLoadComplete() {
 			populateZoomControl("senate-districts-control", "state-senate-districts", "District", "Texas Senate Districts");
 			map.moveLayer('state-senate-districts-lines');
 		}
+		populateZoomControl("school-districts-control", "state-school-districts", "NAME", "School Districts", hideMaskLayer=false);
+
 		// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 		setTimeout(function(){
 			map.moveLayer('raising-school-leaders-points');
@@ -132,7 +134,7 @@ function runWhenLoadComplete() {
 	}
 }
 
-function populateZoomControl(selectID, sourceID, fieldName, layerName) {
+function populateZoomControl(selectID, sourceID, fieldName, layerName, hideMaskLayer=true) {
 	polygons = getPolygons(sourceID, fieldName);
 	var select = document.getElementById(selectID);
 	select.options[0] = new Option(layerName, "-108,25,-88,37,0");
@@ -150,10 +152,12 @@ function populateZoomControl(selectID, sourceID, fieldName, layerName) {
 			}
 		}
 	}
-	map.setLayoutProperty(sourceID + '-poly', 'visibility', 'none');
-// IMPORTANT: these paint properties define the appearance of the mask layer that deemphasises districts outside the one we've zoomed to.  They will overrule anything that's set when that mask layer was loaded.
-	map.setPaintProperty(sourceID + '-poly', 'fill-color', 'rgba(200, 200, 200, 0.7)');
-	map.setPaintProperty(sourceID + '-poly', 'fill-outline-color', 'rgba(200, 200, 200, 0.1)');
+	if (hideMaskLayer) {
+		map.setLayoutProperty(sourceID + '-poly', 'visibility', 'none');
+	// IMPORTANT: these paint properties define the appearance of the mask layer that deemphasises districts outside the one we've zoomed to.  They will overrule anything that's set when that mask layer was loaded.
+		map.setPaintProperty(sourceID + '-poly', 'fill-color', 'rgba(200, 200, 200, 0.7)');
+		map.setPaintProperty(sourceID + '-poly', 'fill-outline-color', 'rgba(200, 200, 200, 0.1)');
+	}
 }
 
 function removeElement(id) {
@@ -384,7 +388,7 @@ window.addEventListener('popstate', function() {
 	}
 })
 
-function zoomToPolygon(sourceID, coords, filterField) {
+function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 	if (typeof coords !== 'undefined') {
 		document.getElementById('statsBox').style.opacity = 0;
 		coords = coords.split(",");
@@ -392,17 +396,19 @@ function zoomToPolygon(sourceID, coords, filterField) {
 			[coords[0], coords[1]],
 			[coords[2], coords[3]]
 		];
-		updateURL(district=coords[4]);
-		if (coords[4] != '0') {
-			filterStates.district.val = coords[4];
-		}
-		if (showHouseDistricts) {
-			showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
-		} else if (showSenateDistricts) {
-			showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts'], showOnly=true);
+		if (maskLayer) {
+			updateURL(district=coords[4]);
+			if (coords[4] != '0') {
+				filterStates.district.val = coords[4];
+			}
+			if (showHouseDistricts) {
+				showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
+			} else if (showSenateDistricts) {
+				showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts'], showOnly=true);
+			}
 		}
 		map.fitBounds(bbox, options={padding: 10, duration: 3000});
-		if (filterField !== undefined) {
+		if (maskLayer && filterField !== undefined) {
 			setTimeout(function(){
 				if (coords[4] === '0') {
 					filterStates.district = false;
@@ -462,6 +468,7 @@ function zoomToPolygon(sourceID, coords, filterField) {
 }
 
 function updateStatsBox() {
+	console.log('called', filterStates);
 	if (filterStates.district && filterStates.district.val) { // only do anything if we have a selected district
 		document.getElementById('statsBox').style.opacity = 1;
 		if (filterStates.district.field.indexOf("house") > -1) {

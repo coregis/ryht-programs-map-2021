@@ -44,13 +44,17 @@
 				<br />
 			</p>
 			<p class="moreinfo">
-				Use the drop-down menus below to zoom to a <span id="house-district-reference">House</span><span id="senate-district-reference">Senate</span> District of your choice.
+				Use the drop-down menus below to zoom to a <span id="house-district-reference">House</span><span id="senate-district-reference">Senate</span> or School District of your choice.
 				<br /><br />
 
 				<!--Drop down controls-->
 
 				<select id="house-districts-control" onchange="zoomToPolygon('state-house-districts', this.value, 'house_dist');"></select>
 				<select id="senate-districts-control" onchange="zoomToPolygon('state-senate-districts', this.value, 'senate_dist');"></select>
+
+				<br /><br />
+
+				<select id="school-districts-control" onchange="zoomToPolygon('state-school-districts', this.value, 'house_dist', maskLayer=false);"></select>
 
 				<!-- House/Senate districts switcher -->
 
@@ -77,6 +81,8 @@
 						<span class="checkmark"></span>Texas <b>House</b> Districts.</a>
 				</p>
 			</p>
+
+
 
 			<div class='legend'>
 				<div class='legend-title'>Click on a program below to toggle its visibility</div>
