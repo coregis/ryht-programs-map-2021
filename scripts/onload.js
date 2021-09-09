@@ -200,13 +200,13 @@ map.on('load', function () {
 		map,
 		{
 			'sourceName': 'state-school-districts',
-			'sourceID': 'rbl_districts_2021_update_tes-dc5kbp',
-			'sourceURL': 'mapbox://core-gis.55g4b92u',
+			'sourceID': 'texas_districts_1882_v4',
+			'sourceURL': 'mapbox://core-gis.b73007d3',
 			'legendID': 'raising_blended_learners_campuses',
 			'displayBehind': 'raising-school-leaders-points',
 			'polygonLayerName': 'state-school-districts-poly',
-			'polygonFillColor': 'rgba(153, 110, 0, 0.25)',
-			'polygonOutlineColor':'rgba(153, 110, 0, 0.8)',
+			'polygonFillColor': 'rgba(153, 110, 0, 0.05)',
+			'polygonOutlineColor':'rgba(153, 110, 0, 0.2)',
 			'visibleOnLoad': true
 		}
 	);
