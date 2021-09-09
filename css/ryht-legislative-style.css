@@ -13,7 +13,7 @@ div#landing {
 	opacity: 1;
 	width: 100%;
 	height: 100%;
-	background: url('../imgs/AOLN-landing.jpg') #2894aa no-repeat fixed center;
+	background: url('../imgs/oxbowpark.jpg') #2894aa repeat fixed center;
   transition: all 0.5s;
 }
 
