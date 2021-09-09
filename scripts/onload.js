@@ -196,6 +196,21 @@ map.on('load', function () {
 		);
 	}
 
+	addVectorLayer(
+		map,
+		{
+			'sourceName': 'raising-blended-learners-districts',
+			'sourceID': 'rbl_districts_2021_update_tes-dc5kbp',
+			'sourceURL': 'mapbox://core-gis.55g4b92u',
+			'legendID': 'raising_blended_learners_campuses',
+			'displayBehind': 'raising-school-leaders-points',
+			'polygonLayerName': 'raising-blended-learners-district-outlines',
+			'polygonFillColor': 'rgba(253, 181, 0, 0.4)',
+			'polygonOutlineColor':'rgba(153, 110, 0, 0.8)',
+			'visibleOnLoad': true
+		}
+	);
+
 
 	// This is a special cases: the layer is never displayed, but can be used to set what will appear in popups when someone clicks on the map
 	addVectorLayer(
