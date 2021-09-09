@@ -205,7 +205,7 @@ map.on('load', function () {
 			'legendID': 'raising_blended_learners_campuses',
 			'displayBehind': 'raising-school-leaders-points',
 			'polygonLayerName': 'raising-blended-learners-district-outlines',
-			'polygonFillColor': 'rgba(253, 181, 0, 0.4)',
+			'polygonFillColor': 'rgba(153, 110, 0, 0.25)',
 			'polygonOutlineColor':'rgba(153, 110, 0, 0.8)',
 			'visibleOnLoad': true
 		}
