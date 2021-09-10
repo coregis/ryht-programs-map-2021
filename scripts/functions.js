@@ -15,6 +15,7 @@ window.location.href.replace(
 );
 var showHouseDistricts = true;
 var showSenateDistricts = false;
+var showSchoolDistricts = false;
 if (
 	(
 		urlParams["districts"] && (
@@ -45,7 +46,39 @@ if (
 	showHouseDistricts = false;
 	showSenateDistricts = true;
 	filterStates.district = {"field": "senate_dist"};
-} else {
+} else if (
+	(
+		urlParams["districts"] && (
+			urlParams["districts"].toLowerCase().indexOf("isd") > -1
+			||
+			urlParams["districts"].toLowerCase() === 'i'
+		)
+	) || (
+		urlParams["Districts"] && (
+			urlParams["Districts"].toLowerCase().indexOf("isd") > -1
+			||
+			urlParams["Districts"].toLowerCase() === 'i'
+		)
+	) || (
+		urlParams["display"] && (
+			urlParams["display"].toLowerCase().indexOf("isd") > -1
+			||
+			urlParams["display"].toLowerCase() === 'i'
+		)
+	) || (
+		urlParams["Display"] && (
+			urlParams["Display"].toLowerCase().indexOf("isd") > -1
+			||
+			urlParams["Display"].toLowerCase() === 'i'
+		)
+	)
+) {
+	showHouseDistricts = false;
+	showSchoolDistricts = true;
+	filterStates.district = {"field": "NAME"};
+
+}
+else {
 	filterStates.district = {"field": "house_dist"};
 }
 // now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
@@ -122,7 +155,10 @@ function runWhenLoadComplete() {
 			populateZoomControl("senate-districts-control", "state-senate-districts", "District", "Texas Senate Districts");
 			map.moveLayer('state-senate-districts-lines');
 		}
-		populateZoomControl("school-districts-control", "state-school-districts", "NAME", "School Districts", hideMaskLayer=false);
+		if (showSchoolDistricts) {
+			populateZoomControl("school-districts-control", "state-school-districts", "NAME", "School Districts");
+			map.moveLayer('state-school-districts-lines');
+		}
 
 		// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 		setTimeout(function(){
@@ -149,6 +185,8 @@ function populateZoomControl(selectID, sourceID, fieldName, layerName, hideMaskL
 				zoomToPolygon(sourceID, polygons[i].bbox.toString() + ',' + polygons[i].name, 'house_dist');
 			} else if (showSenateDistricts) {
 				zoomToPolygon(sourceID, polygons[i].bbox.toString() + ',' + polygons[i].name, 'senate_dist');
+			} else if (showSchoolDistricts) {
+				zoomToPolygon(sourceID, polygons[i].bbox.toString() + ',' + polygons[i].name, 'NAME');
 			}
 		}
 	}
@@ -351,29 +389,34 @@ function stopYearAnimation(playID, stopID) {
 }
 
 function updateURL(district='0') {
+	console.log(district)
 	var newURL = window.location.pathname;
 	var newTitle = 'Raise Your Hand Texas programs'
 	if (showHouseDistricts) {
 		newURL += '?districts=house';
 	} else if (showSenateDistricts) {
 		newURL += '?districts=senate';
+	} else if (showSchoolDistricts) {
+		newURL += '?districts=isd'
 	}
 	if (district === '0') {
 		if (showHouseDistricts) {
 			newTitle += ' by House District ';
 		} else if (showSenateDistricts) {
 			newTitle += ' by Senate District';
+		} else if (showSchoolDistricts) {
+			newTitle += ' by School District';
 		}
 	} else {
 		newURL += (newURL.indexOf('?')) ? '&' : '?';
 		newURL += 'zoomto=' + district;
 		newTitle += ' in '
 		if (showHouseDistricts) {
-			newTitle += 'House ';
+			newTitle += 'House District ';
 		} else if (showSenateDistricts) {
-			newTitle += 'Senate ';
+			newTitle += 'Senate District ';
 		}
-		newTitle += 'District ' + district;
+		newTitle += district;
 	}
 	newURL += '&year=' + filterStates.year;
 	newTitle += ' in ' + filterStates.year;
@@ -405,6 +448,8 @@ function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 				showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
 			} else if (showSenateDistricts) {
 				showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts'], showOnly=true);
+			} else if (showSchoolDistricts) {
+				showHideLayer('state-school-districts-lines', markerNames=['state_school_districts'], showOnly=true);
 			}
 		}
 		map.fitBounds(bbox, options={padding: 10, duration: 3000});
@@ -469,7 +514,7 @@ function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 
 function updateStatsBox() {
 	console.log('called', filterStates);
-	if (filterStates.district && filterStates.district.val) { // only do anything if we have a selected district
+	if (filterStates.district && filterStates.district.val && !isNaN(filterStates.district.val)) { // only do anything if we have a selected district
 		document.getElementById('statsBox').style.opacity = 1;
 		if (filterStates.district.field.indexOf("house") > -1) {
 			document.getElementById("stats.districtType").innerText = "House";

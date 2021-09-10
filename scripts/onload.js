@@ -33,23 +33,32 @@ map.on('click', 'school_house_senate_districts_UNION-poly', function (e) {
 	popupYear = 0;
 });
 
-
-
+// skip the landing page if we already have ?=arguments
+if (urlParams["districts"]) {
+	document.getElementById('landing').style.visibility = "hidden";
+}
 
 // make appropriate legend entry visible, and remove whichever zoom-to-districts dropdown we're not going to be using
 if (showHouseDistricts) {
 	document.getElementById("house_districts_legend_entry").style.display = "inline";
-	document.getElementById("switch-to-senate-districts").style.display = "block";
+	document.getElementById("switch-from-house-districts").style.display = "block";
 	document.getElementById("house-district-reference").style.display = "inline";
 } else {
 	removeElement("house-districts-control"); // the dropdown menu
 }
 if (showSenateDistricts) {
 	document.getElementById("senate_districts_legend_entry").style.display = "inline";
-	document.getElementById("switch-to-house-districts").style.display = "block";
+	document.getElementById("switch-from-senate-districts").style.display = "block";
 	document.getElementById("senate-district-reference").style.display = "inline";
 } else {
 	removeElement("senate-districts-control");
+}
+if (showSchoolDistricts) {
+	document.getElementById("school_districts_legend_entry").style.display = "inline";
+	document.getElementById("switch-from-school-districts").style.display = "block";
+	document.getElementById("school-district-reference").style.display = "inline";
+} else {
+	removeElement("school-districts-control");
 }
 
 
@@ -196,20 +205,24 @@ map.on('load', function () {
 		);
 	}
 
-	addVectorLayer(
-		map,
-		{
-			'sourceName': 'state-school-districts',
-			'sourceID': 'texas_districts_1882_v4',
-			'sourceURL': 'mapbox://core-gis.b73007d3',
-			'legendID': 'raising_blended_learners_campuses',
-			'displayBehind': 'raising-school-leaders-points',
-			'polygonLayerName': 'state-school-districts-poly',
-			'polygonFillColor': 'rgba(153, 110, 0, 0.05)',
-			'polygonOutlineColor':'rgba(153, 110, 0, 0.2)',
-			'visibleOnLoad': true
-		}
-	);
+	if (showSchoolDistricts) {
+		addVectorLayer(
+			map,
+			{
+				'sourceName': 'state-school-districts',
+				'sourceID': 'texas_districts_1882_v4',
+				'sourceURL': 'mapbox://core-gis.b73007d3',
+				'lineLayerName': 'state-school-districts-lines',
+				'lineColor': 'rgba(117, 137, 77, 0.5)',
+				'legendID': 'state_school_districts',
+				'displayBehind': 'raising-school-leaders-points',
+				'polygonLayerName': 'state-school-districts-poly',
+				'polygonFillColor': 'rgba(153, 110, 0, 0)',
+				'polygonOutlineColor':'rgba(153, 110, 0, 0)',
+				'visibleOnLoad': true
+			}
+		);
+	}
 
 
 	// This is a special cases: the layer is never displayed, but can be used to set what will appear in popups when someone clicks on the map
