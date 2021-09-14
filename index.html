@@ -38,7 +38,7 @@
 	<body>
 
 	<!--LANDING PAGE -->
-			<div id='landing' onClick='this.style.opacity = 0; this.style.visibility = "hidden";'>
+		<div id='landing' onClick='this.style.opacity = 0; this.style.visibility = "hidden";'>
 			<div id='landing_content'>
 				<p id='landing_text'>
 					The Raise Your Hand Texas Programs Map is a data visualization platform developed by <a href="https://www.coregis.net">Core GIS</a>.
@@ -60,20 +60,21 @@
 				<br />
 			</p>
 			<p class="moreinfo">
-				Use the drop-down menus below to zoom to a <span id="house-district-reference">House</span><span id="senate-district-reference">Senate</span> District of your choice.
+				Use the drop-down menus below to zoom to a <span id="house-district-reference">House</span><span id="senate-district-reference">Senate</span><span id="school-district-reference">School</span> District of your choice.
 				<br /><br />
 
 				<!--Drop down controls-->
 
 				<select id="house-districts-control" onchange="zoomToPolygon('state-house-districts', this.value, 'house_dist');"></select>
 				<select id="senate-districts-control" onchange="zoomToPolygon('state-senate-districts', this.value, 'senate_dist');"></select>
+				<select id="school-districts-control" onchange="zoomToPolygon('state-school-districts', this.value, 'NAME', maskLayer=false);"></select>
 
 				<!-- House/Senate districts switcher -->
 
 				<p onClick="zoomToPolygon('', '-108,25,-88,37,0', '');" class="zoomoutlink"><span id="texas_icon" style="cursor:pointer"></span>Show whole state
 				</p>
 
-				<p id="switch-to-senate-districts" class="districtswitcher">
+				<p id="switch-from-house-districts" class="districtswitcher">
 					<input type="radio" checked="true">
 						<span class="checkmark"></span>Texas <b>House</b> Districts.
 
@@ -81,9 +82,12 @@
 
 					<a href="index.html?districts=senate"><input type="radio"  style="cursor:pointer" onclick="javascript:window.location.href='index.html?districts=senate'; return false;"/>
 						<span class="checkmark"></span>Texas <b>Senate</b> Districts.</a>
+					<br />
+					<a href="index.html?districts=isd"><input type="radio"  style="cursor:pointer" onclick="javascript:window.location.href='index.html?districts=isd'; return false;"/>
+						<span class="checkmark"></span>Texas <b>School</b> Districts.</a>
 				</p>
 
-				<p id="switch-to-house-districts" class="districtswitcher">
+				<p id="switch-from-senate-districts" class="districtswitcher">
 					<input type="radio" checked="true">
 						<span class="checkmark"></span>Texas <b>Senate</b> Districts.
 
@@ -91,8 +95,26 @@
 
 					<a href="index.html?districts=house"><input type="radio"  style="cursor:pointer" onclick="javascript:window.location.href='index.html?districts=house'; return false;"/>
 						<span class="checkmark"></span>Texas <b>House</b> Districts.</a>
+					<br />
+					<a href="index.html?districts=isd"><input type="radio"  style="cursor:pointer" onclick="javascript:window.location.href='index.html?districts=isd'; return false;"/>
+						<span class="checkmark"></span>Texas <b>School</b> Districts.</a>
+				</p>
+
+				<p id="switch-from-school-districts" class="districtswitcher">
+					<input type="radio" checked="true">
+						<span class="checkmark"></span>Texas <b>School</b> Districts.
+
+					<br />
+
+					<a href="index.html?districts=senate"><input type="radio"  style="cursor:pointer" onclick="javascript:window.location.href='index.html?districts=senate'; return false;"/>
+						<span class="checkmark"></span>Texas <b>Senate</b> Districts.</a>
+					<br />
+					<a href="index.html?districts=house"><input type="radio"  style="cursor:pointer" onclick="javascript:window.location.href='index.html?districts=house'; return false;"/>
+						<span class="checkmark"></span>Texas <b>House</b> Districts.</a>
 				</p>
 			</p>
+
+
 
 			<div class='legend'>
 				<div class='legend-title'>Click on a program below to toggle its visibility</div>
@@ -104,6 +126,7 @@
 						<li onClick="showHideLayer('raising-school-leaders-points', markerNames=['raising_school_leaders']);" style="cursor: pointer;"><span id="raising_school_leaders"></span>Raising School Leaders Participants</li>
 						<li id="house_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-house-districts-lines', markerNames=['state_house_districts']);" style="cursor: pointer !important;"><span id="state_house_districts" class="inactive"></span>State House Districts</li>
 						<li id="senate_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts']);" style="cursor: pointer !important;"><span id="state_senate_districts" class="inactive"></span>State Senate Districts</li>
+						<li id="school_districts_legend_entry" style="display: none;" onClick="showHideLayer('state-school-districts-lines', markerNames=['state_school_districts']);" style="cursor: pointer !important;"><span id="state_school_districts" class="inactive"></span>State School Districts</li>
 						<li onClick="showHideAlumni(showOnly=true);" style="cursor: pointer;"><span id="alumni_markers"></span>Alumni & active in current year</li>
 						<li onClick="showHideAlumni(showOnly=false, hideOnly=true);" style="cursor: pointer;"><span id="active_markers" class="inactive"></span>Active in current year only</li>
 					</ul>
