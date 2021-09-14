@@ -15,6 +15,7 @@ div#landing {
 	height: 100%;
 	background: url('../imgs/oxbowpark.jpg') #2894aa repeat fixed center;
   transition: all 0.5s;
+  visibility: hidden;
 }
 
 div#landing_content {
