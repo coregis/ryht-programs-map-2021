@@ -462,7 +462,7 @@ p.zoomoutlink {
 }
 
 /* some text that just needs to be hidden by default so the code can activate the context-appropriate option */
-span#house-district-reference, span#senate-district-reference {
+span#house-district-reference, span#senate-district-reference, span#school-district-reference {
 	display: none;
 }
 
