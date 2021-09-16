@@ -170,9 +170,7 @@ function runWhenLoadComplete() {
 }
 
 function populateZoomControl(selectID, sourceID, fieldName, layerName, hideMaskLayer=true) {
-	console.log(selectID, sourceID, fieldName, layerName, hideMaskLayer);
 	polygons = getPolygons(sourceID, fieldName);
-	console.log(polygons);
 	var select = document.getElementById(selectID);
 	select.options[0] = new Option(layerName, "-108,25,-88,37,0");
 	updateURL();
@@ -181,7 +179,6 @@ function populateZoomControl(selectID, sourceID, fieldName, layerName, hideMaskL
 			polygons[i].name,
 			polygons[i].bbox.toString() + ',' + polygons[i].name
 		);
-		console.log(urlParams["zoomto"], decodeURIComponent(urlParams["zoomto"].toString()), decodeURIComponent(polygons[i].name.toString()), urlParams["zoomto"].toString() === polygons[i].name.toString())
 		if (urlParams["zoomto"] && decodeURIComponent(urlParams["zoomto"].toString()) === polygons[i].name.toString()) {
 			if (showHouseDistricts) {
 				zoomToPolygon(sourceID, polygons[i].bbox.toString() + ',' + polygons[i].name, 'house_dist');
@@ -395,7 +392,6 @@ function stopYearAnimation(playID, stopID) {
 }
 
 function updateURL(district='0') {
-	console.log(district, filterStates);
 	var newURL = window.location.pathname;
 	var newTitle = 'Raise Your Hand Texas programs'
 	if (showHouseDistricts) {
@@ -438,7 +434,6 @@ window.addEventListener('popstate', function() {
 })
 
 function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
-	console.log(sourceID, coords, filterField, maskLayer);
 	if (typeof coords !== 'undefined') {
 		document.getElementById('statsBox').style.opacity = 0;
 		coords = coords.split(",");
