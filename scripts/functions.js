@@ -535,8 +535,7 @@ function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 }
 
 function updateStatsBox() {
-	console.log('called', filterStates);
-	if (filterStates.district && filterStates.district.val && !isNaN(filterStates.district.val)) { // only do anything if we have a selected district
+	if (filterStates.district && filterStates.district.val) { // only do anything if we have a selected district
 		document.getElementById('statsBox').style.opacity = 1;
 		if (filterStates.district.field.indexOf("house") > -1) {
 			document.getElementById("stats.districtType").innerText = "House";
