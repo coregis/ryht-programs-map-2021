@@ -715,11 +715,19 @@ function addVectorLayer(map, params) {
 // the correct district type at the location of the click, with description HTML from its properties.
 function fillpopup(data) {
 	var html = "<span class='varname'>";
-// the shorthand in this next line is just a compressed if...then.
-// "if showHouseDistricts is true then use the first string, else the second"
-	html += showHouseDistricts ? "House District: " : "Senate District: ";
+	if (showHouseDistricts) {
+		html += "House District: ";
+	} else if (showSenateDistricts) {
+		html += "Senate District: ";
+	}
 	html += "</span><span class='attribute'>";
-	html += showHouseDistricts ? data.HseDistNum : data.SenDistNum;
+	if (showHouseDistricts) {
+		html += data.HseDistNum;
+	} else if (showSenateDistricts) {
+		html += data.SenDistNum;
+	} else if (showSchoolDistricts) {
+		html += data.NAME;
+	}
 	html += "</span>";
 	return html; //this will return the string to the calling function
 }
