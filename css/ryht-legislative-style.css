@@ -325,6 +325,14 @@ ul{
 	display: block;
 	float: left;
 }
+#state_school_districts
+{
+	background:url(../markers/state_school_districts.svg) left center;
+	width:11px;
+	height:16px;
+	display: block;
+	float: left;
+}
 #alumni_markers
 {
 	background:url(../markers/alumni.svg) left center;
