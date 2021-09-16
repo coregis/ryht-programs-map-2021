@@ -76,7 +76,6 @@ if (
 	showHouseDistricts = false;
 	showSchoolDistricts = true;
 	filterStates.district = {"field": "NAME"};
-
 }
 else {
 	filterStates.district = {"field": "house_dist"};
@@ -303,7 +302,11 @@ function setFilter(sourceID) {
 			filters.push(['>', 'year', (filterStates.year - termLength).toString()]);
 		}
 		if (filterStates.district && filterStates.district.val) {
-			filters.push(['==', filterStates.district.field, filterStates.district.val.toString()]);
+			filters.push([
+				'==',
+				showSchoolDistricts ? 'school_district' : filterStates.district.field,
+				filterStates.district.val.toString()
+			]);
 		}
 		map.setFilter(sourceID, filters);
 		map.setPaintProperty(
@@ -433,6 +436,7 @@ window.addEventListener('popstate', function() {
 
 function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 	if (typeof coords !== 'undefined') {
+		console.log(map.getLayer('state-school-districts-poly'));
 		document.getElementById('statsBox').style.opacity = 0;
 		coords = coords.split(",");
 		bbox = [
@@ -469,14 +473,23 @@ function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 						(loadedLineLayers[i][0].indexOf("state-senate-districts") > -1)
 						||
 						(loadedLineLayers[i][0].indexOf("state-house-districts") > -1)
+						||
+						(loadedLineLayers[i][0].indexOf("state-school-districts") > -1)
 					) {
 						if (coords[4] === '0') {
 							map.setFilter(loadedLineLayers[i][0], null);
 						} else {
-							map.setFilter(
-								loadedLineLayers[i][0],
-								['==', 'District', parseInt(coords[4])]
-							);
+							if (showSchoolDistricts) {
+								map.setFilter(
+									loadedLineLayers[i][0],
+									['==', 'NAME', (coords[4])]
+								);
+							} else {
+								map.setFilter(
+									loadedLineLayers[i][0],
+									['==', 'District', parseInt(coords[4])]
+								);
+							}
 						}
 					}
 				}
@@ -491,11 +504,20 @@ function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 						(loadedPolygonLayers[i][0].indexOf("state-senate-districts") > -1)
 						||
 						(loadedPolygonLayers[i][0].indexOf("state-house-districts") > -1)
+						||
+						(loadedPolygonLayers[i][0].indexOf("state-school-districts") > -1)
 					) {
-						map.setFilter(
-							loadedPolygonLayers[i][0],
-							['!=', 'District', parseInt(coords[4])]
-						);
+						if (showSchoolDistricts) {
+							map.setFilter(
+								loadedPolygonLayers[i][0],
+								['!=', 'NAME', (coords[4])]
+							);
+						} else {
+							map.setFilter(
+								loadedPolygonLayers[i][0],
+								['!=', 'District', parseInt(coords[4])]
+							);
+						}
 					}
 				}
 				for (i in loadedPointLayers) {
