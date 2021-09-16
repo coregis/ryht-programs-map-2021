@@ -436,7 +436,6 @@ window.addEventListener('popstate', function() {
 
 function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 	if (typeof coords !== 'undefined') {
-		console.log(map.getLayer('state-school-districts-poly'));
 		document.getElementById('statsBox').style.opacity = 0;
 		coords = coords.split(",");
 		bbox = [
