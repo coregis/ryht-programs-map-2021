@@ -392,7 +392,7 @@ function stopYearAnimation(playID, stopID) {
 }
 
 function updateURL(district='0') {
-	console.log(district)
+	console.log(district);
 	var newURL = window.location.pathname;
 	var newTitle = 'Raise Your Hand Texas programs'
 	if (showHouseDistricts) {
@@ -419,7 +419,7 @@ function updateURL(district='0') {
 		} else if (showSenateDistricts) {
 			newTitle += 'Senate District ';
 		}
-		newTitle += district;
+		newTitle += decodeURIComponent(district);
 	}
 	newURL += '&year=' + filterStates.year;
 	newTitle += ' in ' + filterStates.year;
@@ -543,7 +543,7 @@ function updateStatsBox() {
 		} else {
 			document.getElementById("stats.districtType").innerText = "";
 		}
-		document.getElementById("stats.districtName").innerText = filterStates.district.val;
+		document.getElementById("stats.districtName").innerText = decodeURIComponent(filterStates.district.val);
 		document.getElementById("stats.year").innerText = filterStates.year;
 		for (i in loadedPointLayers) {
 			if (loadedPointLayers[i][0].includes("raising-blended-learners")) {
