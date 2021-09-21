@@ -1,15 +1,64 @@
-/* your theme's styles */
-body {
+html, body {
 	padding:0;
 	margin:0;
+	font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+    overflow: hidden;
+}
+
+div#landing {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 1000;
+	opacity: 1;
+	width: 100%;
+	height: 100%;
+	background: url('../imgs/white.png')  repeat fixed center;
+  transition: all 0.5s;
+  visibility: hidden;
+}
+
+div#landing_content {
+	position: relative;
+	width: 38vw;
+	margin: 25vh auto;
+	font-family: Montserrat, sans-serif;
+}
+
+#landing_text a:hover, .offcanvas a:focus{
+    color: #a1a1a1;
+	text-decoration:none;
+}
+
+#landing_text a:link, a:visited {
+	color: #F15C22;
+	text-decoration: none;
+}
+
+#landing_text {
+	padding: 2ex 2em;
+	opacity: 0.9;
+	background: #2C2A29;
+	color: white;
+}
+
+#landing_content .button {
+	border: 2px #41B6E6;
+	color:white;
+	background:#F15C22;
+	padding:6px 12px;
+	font-weight: 500;
 }
 
 div#map {
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
-	position: absolute;
+	  z-index: 1;
+	  height: 100%;
+	  width: calc(100% - 260px);
+	  position: absolute;
+	  left: 260px;
+	  top: 0;
+	  right: 0;
+	  bottom:0;
 }
 
 /*This formatting is for the  name of the fields in the pop-up*/
@@ -55,6 +104,11 @@ img {
 	overflow-y: auto;
 }
 
+select {
+	max-width: 200px;
+	overflow: hidden;
+}
+
 .zoom {
 	background-color: #ffffff;
 	opacity:.8;
@@ -77,9 +131,6 @@ img {
 
 .legend, .stats {
 	background-color: rgba(255, 255, 255, 0.7);
-	border: 1px solid rgba(190, 188, 188, 1);
-	color: rgba(82, 82, 80, 1);
-	min-width: 225px;
 	font-weight: normal;
 	text-decoration: none;
 	overflow: hidden; /*planning ahead to clear floats*/
@@ -89,12 +140,10 @@ img {
 
 .legend {
 	padding: 10px;
-  position: fixed;
 	z-index: 1;
-  right: 0;
-	bottom: 0;
-	margin-right: 10px;
-	margin-bottom: 20px;
+	font-family: "Montserrat", helvetica, arial, sans-serif;
+	width: 240px;
+	margin: 10px auto;
 }
 
 .stats {
@@ -104,11 +153,12 @@ img {
 	padding: 10px;
 	padding-right: 0px;
   position: fixed;
-	z-index : 1;
+	z-index : 10;
   right: 0;
 	bottom: 10;
 	margin-right: 10px;
 	margin-top: 10px;
+	min-width: 225px;
 /*	margin-bottom: 20px; */
 }
 
@@ -119,8 +169,9 @@ img {
   text-align: left;
   margin-bottom: 5px;
 	font-family: "Montserrat", helvetica, arial, sans-serif;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 90%;
+  color: #2C2A29;
 }
 .stats .stats-scale ul {
    margin: 0;
@@ -158,8 +209,10 @@ ul{
     text-align: left;
     margin-bottom: 5px;
 	font-family: "Montserrat", helvetica, arial, sans-serif;
-    font-weight: bold;
+    font-weight: 700;
+	color:#2C2A29;
     font-size: 90%;
+	padding-bottom: 10px;
     }
   .legend .legend-scale ul {
     margin: 0;
@@ -290,6 +343,14 @@ ul{
 	display: block;
 	float: left;
 }
+#state_school_districts
+{
+	background:url(../markers/state_school_districts.svg) left center;
+	width:11px;
+	height:16px;
+	display: block;
+	float: left;
+}
 #alumni_markers
 {
 	background:url(../markers/alumni.svg) left center;
@@ -348,7 +409,20 @@ a:active {
     text-decoration: underline;
 }
 
-/* Use this to style the 'Zoom to Districts' pop-out */
+/* This code makes the sidenav 'always on' */
+.sidenav {
+  height: 100%;
+  width: 260px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #ffff;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Use this code to make  the 'Zoom to Districts' pop-out  collapse
 .sidenav {
     height: 100%;
     width: 0;
@@ -360,7 +434,7 @@ a:active {
     overflow-x: hidden;
     transition: 0.5s;
     /*padding-top: 60px;*/
-}
+}*/
 
 /*.sidenav p {
     padding: 8px 8px 8px 32px;
@@ -387,7 +461,7 @@ border: none;
 }
 
 p.moreinfo  {
-  padding: 8px 8px 8px 32px;
+  padding: 8px 48px 8px 32px;
   background: #ffff;
   color:#4a4a4a;
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
@@ -401,6 +475,7 @@ p.districtswitcher, p.zoomoutlink  {
   background: #ffff;
   color:#4a4a4a;
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
+  font-weight:500;
   font-size:14px;
  /* width:auto !important;*/
 }
@@ -414,7 +489,7 @@ p.zoomoutlink {
 }
 
 /* some text that just needs to be hidden by default so the code can activate the context-appropriate option */
-span#house-district-reference, span#senate-district-reference {
+span#house-district-reference, span#senate-district-reference, span#school-district-reference {
 	display: none;
 }
 
@@ -437,7 +512,7 @@ p.programs  {
 }
 
 .sidenav img {
-	width: 240px;
+	width: 260px;
 	padding: 0px 30px;
 }
 
@@ -488,20 +563,15 @@ p.programs  {
     margin-left: 50px;
 }
 
-#main {
-    transition: margin-left .5s;
-    padding: 0px;
-}
-
 #about {
 	/*transition: margin-left .5s;
     padding: 16px;*/
 	font-family: "Montserrat", Arial, Helvetica, sans-serif;
-	font-weight: normal;
+	font-weight: 700;
 	color: #ffff;
 	filter: alpha(opacity = 0);
     position:fixed;
-	padding:5px 5px 5px 5px;
+	padding:5px 10px 5px 10px;
 	left:20px;
 	top:20px;
     display:block;
@@ -549,7 +619,7 @@ p.programs  {
 button.collapsible  {
   padding: 8px 8px 8px 32px;
   background: #ffff;
-  color:#4a4a4a;
+  color:#F15C22;
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
   font-size:12px;
  /* width:auto !important;*/
@@ -570,9 +640,22 @@ input#slider {
 	width: 85%;
 }
 
-div#slidercontrols, div#sliderbar {
+div#sliderbar {
 	text-align: center;
 	clear: both;
+	padding-top: 24px;
+}
+
+div#slidercontrols{
+	text-align: center;
+	clear: both;
+	padding-bottom: 24px;
+}
+
+
+div#slidercontrols img {
+	width: 2em;
+	padding: 0px;
 }
 
 div#slidercontrols span, div#sliderbar input {
@@ -581,7 +664,7 @@ div#slidercontrols span, div#sliderbar input {
 
 span#slider_play, span#slider_stop {
 	margin: 0 1em;
-	width: 100%;
+	width: 10%;
 }
 
 span#slider_stop {

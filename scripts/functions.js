@@ -15,6 +15,7 @@ window.location.href.replace(
 );
 var showHouseDistricts = true;
 var showSenateDistricts = false;
+var showSchoolDistricts = false;
 if (
 	(
 		urlParams["districts"] && (
@@ -45,7 +46,38 @@ if (
 	showHouseDistricts = false;
 	showSenateDistricts = true;
 	filterStates.district = {"field": "senate_dist"};
-} else {
+} else if (
+	(
+		urlParams["districts"] && (
+			urlParams["districts"].toLowerCase().indexOf("isd") > -1
+			||
+			urlParams["districts"].toLowerCase() === 'i'
+		)
+	) || (
+		urlParams["Districts"] && (
+			urlParams["Districts"].toLowerCase().indexOf("isd") > -1
+			||
+			urlParams["Districts"].toLowerCase() === 'i'
+		)
+	) || (
+		urlParams["display"] && (
+			urlParams["display"].toLowerCase().indexOf("isd") > -1
+			||
+			urlParams["display"].toLowerCase() === 'i'
+		)
+	) || (
+		urlParams["Display"] && (
+			urlParams["Display"].toLowerCase().indexOf("isd") > -1
+			||
+			urlParams["Display"].toLowerCase() === 'i'
+		)
+	)
+) {
+	showHouseDistricts = false;
+	showSchoolDistricts = true;
+	filterStates.district = {"field": "NAME"};
+}
+else {
 	filterStates.district = {"field": "house_dist"};
 }
 // now we can check the two showXDistricts variables anywhere that we might introduce House or Senate districts to decide which one to show
@@ -109,7 +141,7 @@ function showHideAlumni(showOnly=false, hideOnly=false) {
 //zoomToPolygon() zooms the map to the district extent
 
 function runWhenLoadComplete() {
-	if (!map.getLayer('raising-school-leaders-points')) {
+	if (!map.getLayer('raising-school-leaders-points') || !map.getLayer('charles-butt-scholars-points') || !map.getLayer('raising-blended-learners-campuses-points') || !map.getLayer('raising-texas-teachers-points')) {
 		setTimeout(runWhenLoadComplete, 100);
 	}
 	else {
@@ -122,6 +154,11 @@ function runWhenLoadComplete() {
 			populateZoomControl("senate-districts-control", "state-senate-districts", "District", "Texas Senate Districts");
 			map.moveLayer('state-senate-districts-lines');
 		}
+		if (showSchoolDistricts) {
+			populateZoomControl("school-districts-control", "state-school-districts", "NAME", "School Districts");
+			map.moveLayer('state-school-districts-lines');
+		}
+
 		// using a timeout here to stop this from running before the big Raising School Leaders layer has finished loading
 		setTimeout(function(){
 			map.moveLayer('raising-school-leaders-points');
@@ -132,7 +169,7 @@ function runWhenLoadComplete() {
 	}
 }
 
-function populateZoomControl(selectID, sourceID, fieldName, layerName) {
+function populateZoomControl(selectID, sourceID, fieldName, layerName, hideMaskLayer=true) {
 	polygons = getPolygons(sourceID, fieldName);
 	var select = document.getElementById(selectID);
 	select.options[0] = new Option(layerName, "-108,25,-88,37,0");
@@ -142,18 +179,22 @@ function populateZoomControl(selectID, sourceID, fieldName, layerName) {
 			polygons[i].name,
 			polygons[i].bbox.toString() + ',' + polygons[i].name
 		);
-		if (urlParams["zoomto"] && urlParams["zoomto"].toString() === polygons[i].name.toString()) {
+		if (urlParams["zoomto"] && decodeURIComponent(urlParams["zoomto"].toString()) === polygons[i].name.toString()) {
 			if (showHouseDistricts) {
 				zoomToPolygon(sourceID, polygons[i].bbox.toString() + ',' + polygons[i].name, 'house_dist');
 			} else if (showSenateDistricts) {
 				zoomToPolygon(sourceID, polygons[i].bbox.toString() + ',' + polygons[i].name, 'senate_dist');
+			} else if (showSchoolDistricts) {
+				zoomToPolygon(sourceID, polygons[i].bbox.toString() + ',' + polygons[i].name, 'NAME');
 			}
 		}
 	}
-	map.setLayoutProperty(sourceID + '-poly', 'visibility', 'none');
-// IMPORTANT: these paint properties define the appearance of the mask layer that deemphasises districts outside the one we've zoomed to.  They will overrule anything that's set when that mask layer was loaded.
-	map.setPaintProperty(sourceID + '-poly', 'fill-color', 'rgba(200, 200, 200, 0.7)');
-	map.setPaintProperty(sourceID + '-poly', 'fill-outline-color', 'rgba(200, 200, 200, 0.1)');
+	if (hideMaskLayer) {
+		map.setLayoutProperty(sourceID + '-poly', 'visibility', 'none');
+	// IMPORTANT: these paint properties define the appearance of the mask layer that deemphasises districts outside the one we've zoomed to.  They will overrule anything that's set when that mask layer was loaded.
+		map.setPaintProperty(sourceID + '-poly', 'fill-color', 'rgba(200, 200, 200, 0.7)');
+		map.setPaintProperty(sourceID + '-poly', 'fill-outline-color', 'rgba(200, 200, 200, 0.1)');
+	}
 }
 
 function removeElement(id) {
@@ -261,7 +302,11 @@ function setFilter(sourceID) {
 			filters.push(['>', 'year', (filterStates.year - termLength).toString()]);
 		}
 		if (filterStates.district && filterStates.district.val) {
-			filters.push(['==', filterStates.district.field, filterStates.district.val.toString()]);
+			filters.push([
+				'==',
+				showSchoolDistricts ? 'school_district' : filterStates.district.field,
+				filterStates.district.val.toString()
+			]);
 		}
 		map.setFilter(sourceID, filters);
 		map.setPaintProperty(
@@ -353,23 +398,27 @@ function updateURL(district='0') {
 		newURL += '?districts=house';
 	} else if (showSenateDistricts) {
 		newURL += '?districts=senate';
+	} else if (showSchoolDistricts) {
+		newURL += '?districts=isd'
 	}
 	if (district === '0') {
 		if (showHouseDistricts) {
 			newTitle += ' by House District ';
 		} else if (showSenateDistricts) {
 			newTitle += ' by Senate District';
+		} else if (showSchoolDistricts) {
+			newTitle += ' by School District';
 		}
 	} else {
 		newURL += (newURL.indexOf('?')) ? '&' : '?';
 		newURL += 'zoomto=' + district;
 		newTitle += ' in '
 		if (showHouseDistricts) {
-			newTitle += 'House ';
+			newTitle += 'House District ';
 		} else if (showSenateDistricts) {
-			newTitle += 'Senate ';
+			newTitle += 'Senate District ';
 		}
-		newTitle += 'District ' + district;
+		newTitle += decodeURIComponent(district);
 	}
 	newURL += '&year=' + filterStates.year;
 	newTitle += ' in ' + filterStates.year;
@@ -384,7 +433,7 @@ window.addEventListener('popstate', function() {
 	}
 })
 
-function zoomToPolygon(sourceID, coords, filterField) {
+function zoomToPolygon(sourceID, coords, filterField, maskLayer=true) {
 	if (typeof coords !== 'undefined') {
 		document.getElementById('statsBox').style.opacity = 0;
 		coords = coords.split(",");
@@ -392,17 +441,21 @@ function zoomToPolygon(sourceID, coords, filterField) {
 			[coords[0], coords[1]],
 			[coords[2], coords[3]]
 		];
-		updateURL(district=coords[4]);
-		if (coords[4] != '0') {
-			filterStates.district.val = coords[4];
-		}
-		if (showHouseDistricts) {
-			showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
-		} else if (showSenateDistricts) {
-			showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts'], showOnly=true);
+		if (maskLayer) {
+			updateURL(district=coords[4]);
+			if (coords[4] != '0') {
+				filterStates.district.val = coords[4];
+			}
+			if (showHouseDistricts) {
+				showHideLayer('state-house-districts-lines', markerNames=['state_house_districts'], showOnly=true);
+			} else if (showSenateDistricts) {
+				showHideLayer('state-senate-districts-lines', markerNames=['state_senate_districts'], showOnly=true);
+			} else if (showSchoolDistricts) {
+				showHideLayer('state-school-districts-lines', markerNames=['state_school_districts'], showOnly=true);
+			}
 		}
 		map.fitBounds(bbox, options={padding: 10, duration: 3000});
-		if (filterField !== undefined) {
+		if (maskLayer && filterField !== undefined) {
 			setTimeout(function(){
 				if (coords[4] === '0') {
 					filterStates.district = false;
@@ -418,14 +471,23 @@ function zoomToPolygon(sourceID, coords, filterField) {
 						(loadedLineLayers[i][0].indexOf("state-senate-districts") > -1)
 						||
 						(loadedLineLayers[i][0].indexOf("state-house-districts") > -1)
+						||
+						(loadedLineLayers[i][0].indexOf("state-school-districts") > -1)
 					) {
 						if (coords[4] === '0') {
 							map.setFilter(loadedLineLayers[i][0], null);
 						} else {
-							map.setFilter(
-								loadedLineLayers[i][0],
-								['==', 'District', parseInt(coords[4])]
-							);
+							if (showSchoolDistricts) {
+								map.setFilter(
+									loadedLineLayers[i][0],
+									['==', 'NAME', (coords[4])]
+								);
+							} else {
+								map.setFilter(
+									loadedLineLayers[i][0],
+									['==', 'District', parseInt(coords[4])]
+								);
+							}
 						}
 					}
 				}
@@ -440,11 +502,20 @@ function zoomToPolygon(sourceID, coords, filterField) {
 						(loadedPolygonLayers[i][0].indexOf("state-senate-districts") > -1)
 						||
 						(loadedPolygonLayers[i][0].indexOf("state-house-districts") > -1)
+						||
+						(loadedPolygonLayers[i][0].indexOf("state-school-districts") > -1)
 					) {
-						map.setFilter(
-							loadedPolygonLayers[i][0],
-							['!=', 'District', parseInt(coords[4])]
-						);
+						if (showSchoolDistricts) {
+							map.setFilter(
+								loadedPolygonLayers[i][0],
+								['!=', 'NAME', (coords[4])]
+							);
+						} else {
+							map.setFilter(
+								loadedPolygonLayers[i][0],
+								['!=', 'District', parseInt(coords[4])]
+							);
+						}
 					}
 				}
 				for (i in loadedPointLayers) {
@@ -465,13 +536,13 @@ function updateStatsBox() {
 	if (filterStates.district && filterStates.district.val) { // only do anything if we have a selected district
 		document.getElementById('statsBox').style.opacity = 1;
 		if (filterStates.district.field.indexOf("house") > -1) {
-			document.getElementById("stats.districtType").innerText = "House";
+			document.getElementById("stats.districtType").innerText = "House District";
 		} else if (filterStates.district.field.indexOf("senate") > -1) {
-			document.getElementById("stats.districtType").innerText = "Senate";
+			document.getElementById("stats.districtType").innerText = "Senate District";
 		} else {
 			document.getElementById("stats.districtType").innerText = "";
 		}
-		document.getElementById("stats.districtName").innerText = filterStates.district.val;
+		document.getElementById("stats.districtName").innerText = decodeURIComponent(filterStates.district.val);
 		document.getElementById("stats.year").innerText = filterStates.year;
 		for (i in loadedPointLayers) {
 			if (loadedPointLayers[i][0].includes("raising-blended-learners")) {
@@ -663,11 +734,19 @@ function addVectorLayer(map, params) {
 // the correct district type at the location of the click, with description HTML from its properties.
 function fillpopup(data) {
 	var html = "<span class='varname'>";
-// the shorthand in this next line is just a compressed if...then.
-// "if showHouseDistricts is true then use the first string, else the second"
-	html += showHouseDistricts ? "House District: " : "Senate District: ";
+	if (showHouseDistricts) {
+		html += "House District: ";
+	} else if (showSenateDistricts) {
+		html += "Senate District: ";
+	}
 	html += "</span><span class='attribute'>";
-	html += showHouseDistricts ? data.HseDistNum : data.SenDistNum;
+	if (showHouseDistricts) {
+		html += data.HseDistNum;
+	} else if (showSenateDistricts) {
+		html += data.SenDistNum;
+	} else if (showSchoolDistricts) {
+		html += data.NAME;
+	}
 	html += "</span>";
 	return html; //this will return the string to the calling function
 }

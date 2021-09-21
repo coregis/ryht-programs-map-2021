@@ -5,10 +5,16 @@ var bounds = [
 		[-114.9594, 21.637], // southwest coords
 		[-85.50, 39.317] // northeast coords
 	];
+
+// skip the landing page if we already have ?=arguments
+if (!urlParams["districts"]) {
+	document.getElementById('landing').style.visibility = "visible";
+}
+
 var map = new mapboxgl.Map({
 	container: 'map', // container id
 	style: 'mapbox://styles/core-gis/ckq137o0x11su18qzogi3e52t', // stylesheet location; this is the v2.3.1 style with markers turned OFF
-	center: [-98.887939, 31.821565], // starting position [lng, lat]
+	center: [-99.228516, 31.203405], // starting position [lng, lat]
 	zoom: 5.5, // starting zoom
 	maxBounds: bounds // sets bounds as max
 });
@@ -35,21 +41,27 @@ map.on('click', 'school_house_senate_districts_UNION-poly', function (e) {
 
 
 
-
 // make appropriate legend entry visible, and remove whichever zoom-to-districts dropdown we're not going to be using
 if (showHouseDistricts) {
 	document.getElementById("house_districts_legend_entry").style.display = "inline";
-	document.getElementById("switch-to-senate-districts").style.display = "block";
+	document.getElementById("switch-from-house-districts").style.display = "block";
 	document.getElementById("house-district-reference").style.display = "inline";
 } else {
 	removeElement("house-districts-control"); // the dropdown menu
 }
 if (showSenateDistricts) {
 	document.getElementById("senate_districts_legend_entry").style.display = "inline";
-	document.getElementById("switch-to-house-districts").style.display = "block";
+	document.getElementById("switch-from-senate-districts").style.display = "block";
 	document.getElementById("senate-district-reference").style.display = "inline";
 } else {
 	removeElement("senate-districts-control");
+}
+if (showSchoolDistricts) {
+	document.getElementById("school_districts_legend_entry").style.display = "inline";
+	document.getElementById("switch-from-school-districts").style.display = "block";
+	document.getElementById("school-district-reference").style.display = "inline";
+} else {
+	removeElement("school-districts-control");
 }
 
 
@@ -192,6 +204,25 @@ map.on('load', function () {
 				'polygonOutlineColor': 'rgba(200, 100, 240, 0)',
 				'visibleOnLoad': true,
 				'usedInZoomControl': true
+			}
+		);
+	}
+
+	if (showSchoolDistricts) {
+		addVectorLayer(
+			map,
+			{
+				'sourceName': 'state-school-districts',
+				'sourceID': 'texas_districts_1882_v4',
+				'sourceURL': 'mapbox://core-gis.b73007d3',
+				'lineLayerName': 'state-school-districts-lines',
+				'lineColor': 'rgba(117, 137, 77, 0.5)',
+				'legendID': 'state_school_districts',
+				'displayBehind': 'raising-school-leaders-points',
+				'polygonLayerName': 'state-school-districts-poly',
+				'polygonFillColor': 'rgba(153, 110, 0, 0)',
+				'polygonOutlineColor':'rgba(153, 110, 0, 0)',
+				'visibleOnLoad': true
 			}
 		);
 	}
