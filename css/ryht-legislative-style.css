@@ -13,7 +13,7 @@ div#landing {
 	opacity: 1;
 	width: 100%;
 	height: 100%;
-	background: url('../imgs/oxbowpark.jpg') #2894aa repeat fixed center;
+	background: url('../imgs/white.png')  repeat fixed center;
   transition: all 0.5s;
   visibility: hidden;
 }
@@ -22,17 +22,32 @@ div#landing_content {
 	position: relative;
 	width: 38vw;
 	margin: 25vh auto;
+	font-family: Montserrat, sans-serif;
+}
+
+#landing_text a:hover, .offcanvas a:focus{
+    color: #a1a1a1;
+	text-decoration:none;
+}
+
+#landing_text a:link, a:visited {
+	color: #F15C22;
+	text-decoration: none;
 }
 
 #landing_text {
 	padding: 2ex 2em;
 	opacity: 0.9;
-	background: #2894aa;
+	background: #2C2A29;
 	color: white;
 }
 
 #landing_content .button {
-	border: 2px solid white;
+	border: 2px #41B6E6;
+	color:white;
+	background:#F15C22;
+	padding:6px 12px;
+	font-weight: 500;
 }
 
 div#map {
@@ -126,6 +141,7 @@ select {
 .legend {
 	padding: 10px;
 	z-index: 1;
+	font-family: "Montserrat", helvetica, arial, sans-serif;
 	width: 240px;
 	margin: 10px auto;
 }
@@ -153,8 +169,9 @@ select {
   text-align: left;
   margin-bottom: 5px;
 	font-family: "Montserrat", helvetica, arial, sans-serif;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 90%;
+  color: #2C2A29;
 }
 .stats .stats-scale ul {
    margin: 0;
@@ -192,7 +209,8 @@ ul{
     text-align: left;
     margin-bottom: 5px;
 	font-family: "Montserrat", helvetica, arial, sans-serif;
-    font-weight: bold;
+    font-weight: 700;
+	color:#2C2A29;
     font-size: 90%;
 	padding-bottom: 10px;
     }
@@ -457,6 +475,7 @@ p.districtswitcher, p.zoomoutlink  {
   background: #ffff;
   color:#4a4a4a;
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
+  font-weight:500;
   font-size:14px;
  /* width:auto !important;*/
 }
@@ -548,7 +567,7 @@ p.programs  {
 	/*transition: margin-left .5s;
     padding: 16px;*/
 	font-family: "Montserrat", Arial, Helvetica, sans-serif;
-	font-weight: normal;
+	font-weight: 700;
 	color: #ffff;
 	filter: alpha(opacity = 0);
     position:fixed;
@@ -600,7 +619,7 @@ p.programs  {
 button.collapsible  {
   padding: 8px 8px 8px 32px;
   background: #ffff;
-  color:#4a4a4a;
+  color:#F15C22;
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
   font-size:12px;
  /* width:auto !important;*/
