@@ -5,6 +5,12 @@ var bounds = [
 		[-114.9594, 21.637], // southwest coords
 		[-85.50, 39.317] // northeast coords
 	];
+
+// skip the landing page if we already have ?=arguments
+if (!urlParams["districts"]) {
+	document.getElementById('landing').style.visibility = "visible";
+}
+
 var map = new mapboxgl.Map({
 	container: 'map', // container id
 	style: 'mapbox://styles/core-gis/ckq137o0x11su18qzogi3e52t', // stylesheet location; this is the v2.3.1 style with markers turned OFF
@@ -33,10 +39,7 @@ map.on('click', 'school_house_senate_districts_UNION-poly', function (e) {
 	popupYear = 0;
 });
 
-// skip the landing page if we already have ?=arguments
-if (urlParams["districts"]) {
-	document.getElementById('landing').style.visibility = "hidden";
-}
+
 
 // make appropriate legend entry visible, and remove whichever zoom-to-districts dropdown we're not going to be using
 if (showHouseDistricts) {
